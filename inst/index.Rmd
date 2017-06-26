@@ -1,0 +1,15 @@
+---
+title: "GeoSpatial Data Visualization in R"
+author: "Bhaskar V. Karambelkar"
+navlink: "[UserR!2017](https://www.user2017.brussels/uploads/BhaskarKarambelkar.html)"
+og:
+  type: "article"
+  title: "GeoSpatial Data Visualization in R"
+footer:
+  - content: '[Twitter](http://www.com/) • [LinkedIn](http://example.com/)<br/>'
+  - content: 'Copyright 2017 Bhaskar V. Karambelkar'
+date: "`r Sys.Date()`"
+output: markdowntemplates::bulma
+---
+
+[Introduction](presentations/01-Introduction.html)

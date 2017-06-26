@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Geospatial Visualization using R</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Bhaskar V. Karambelkar" />
+    <link href="libs/remark-css/example.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Geospatial Visualization using R
+## UseR! 2017, Brussels
+### Bhaskar V. Karambelkar
+### 2017/07/04
+
+---
+
+
+
+
+# Welcome!
+
+--
+
+- What's this all about?
+
+--
+
+- Speaker/Tutor Introduction
+
+--
+
+- Scope of the Tutorial
+
+
+---
+
+# Getting Setup
+
+--
+
+- Docker FTW!
+
+--
+
+- [Rocker](https://hub.docker.com/u/rocker/) FTW!
+
+--
+
+- `docker pull bhaskarvk/rgeodataviz`
+
+---
+
+class: inverse center middle
+
+# Part 1: Spatial Data
+
+---
+
+## Part 1.1: Spatail Data Structures in R
+
+--
+
+### Vector Data
+
+
+- [`sp`](https://cran.r-project.org/package=sp)
+
+- [`sf`](https://cran.r-project.org/package=sf)
+
+- [`geojson`](https://cran.r-project.org/package=geojson)
+
+--
+
+### Raster Data
+
+- [`raster`](https://cran.r-project.org/package=raster)
+
+- [`rncdf4`](https://cran.r-project.org/package=rncdf4)
+
+- [`rhdf5`](https://bioconductor.org/packages/release/bioc/html/rhdf5.html)
+
+---
+
+## Part 1.2: Spatial Data Storage Formats  
+
+- ArcGIS [shapefile](https://en.wikipedia.org/wiki/Shapefile)
+
+- [GeoJSON]() &amp; [TopoJSON]()
+
+- [PostGIS]() and other spatial databases
+
+- [KML]()
+
+- [GeoTIFF](https://trac.osgeo.org/geotiff/)
+
+- [GeoPackage](http://www.geopackage.org/)
+
+- And Lots More
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false,
+"click": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+Package: user2017.geodataviz
+Type: Package
+Title: Tutorial on Geo-Spatial Data Visualization Options in R.
+Version: 0.1.0
+Authors@R: person("Bhaskar", "Karambelkar", email = "bhaskarvk@gmail.com",
+    role = c("aut", "cre"))
+Description: This is a 'learnr' based tutorial on data visualization options
+    available in R.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends:
+    R (>= 3.1.0)
+Imports: learnr, shiny
+Suggests: rgdal,
+    rgeos,
+    sp,
+    sf,
+VignetteBuilder: knitr
+URL: https://github.com/bhaskarvk/user2017.geodataviz
+BugReports: https://github.com/bhaskarvk/user2017.geodataviz/issues
+RoxygenNote: 6.0.1
