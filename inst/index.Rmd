@@ -1,15 +1,83 @@
 ---
 title: "GeoSpatial Data Visualization in R"
 author: "Bhaskar V. Karambelkar"
-navlink: "[UserR!2017](https://www.user2017.brussels/uploads/BhaskarKarambelkar.html)"
-og:
-  type: "article"
-  title: "GeoSpatial Data Visualization in R"
-footer:
-  - content: '[Twitter](http://www.com/) • [LinkedIn](http://example.com/)<br/>'
-  - content: 'Copyright 2017 Bhaskar V. Karambelkar'
 date: "`r Sys.Date()`"
-output: markdowntemplates::bulma
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{GeoSpatial Data Visualization in R}
+  %\VignetteEncoding{UTF-8}
 ---
 
-[Introduction](presentations/01-Introduction.html)
+#### Code and Slides
+
+All the code and slides will be made available on my [user2017.geodataviz](https://github.com/bhaskarvk/user2017.geodataviz) github repo before July 3<sup>rd</sup>, 2017.
+
+#### Pre-Tutorial Setup
+
+Please do this well before the tutorial. The bandwidth at the venue could be very limited and the docker image I will be using is approximately 1.6G. The better prepared you come for the tutorial the more you will get out of it.
+
+- Install [docker](https://store.docker.com/search?type=edition&offering=community), and [docker toolbox](https://www.docker.com/products/docker-toolbox) (only for Windows and Mac).
+
+- Either using the kitematic GUI tool or command line pull the `bhaskarvk/rgeodataviz` image.<br/>Command line: `docker pull bhaskarvk/rgeodataviz`
+
+
+
+#### Structure of the Tutorial
+
+This is going to be whirlwind tour of options for plotting spatial data using R. Instead of deep diving in to any one particular approach, the focus is going to be on gaining a broad understanding of many visualization techniques. You will be exposed to many R packages and tools and at times it may overwhelm you. But even then you will come out of this with a better understanding and appreciation of all the visualization options in R when it comes to spatial data.
+
+##### Part 1: Introduction
+
+_from_ **9:30 - 9:50**
+
+I will go over the objectives and the scope of the tutorial, introduce myself, get to know the audience a bit. We will also try and solve any last minute setup issues, in case someone has them.
+
+##### Part 2: R Packages
+
+_from_ **9:50 - 10:05**
+
+In this part I will briefly go over some major R packages available for working with spatial data. We will cover R packages for data containers, reading/writing external data, spatial operations, and finally plotting spatial data.
+
+##### Part 3: Spatial Data
+
+_from_ **10:05 - 10:20**
+
+Here we will go over the major R packages for storing spatial data in an R environment. We will also explore briefly some common ways to interact with spatial data stored in files/databases.
+
+##### 5 Minutes break
+
+##### Part 4: Spatial Data Operations
+
+_from_ **10:25 - 10:40**
+
+Here we will explore some common spatial operations on data. This involves sub-setting, joining spatial data. Determining centroids, convex hulls, voronoi regions etc. 
+
+##### Part 5: Ways to Output Maps
+
+_from_ **10:40 - 11:00** 
+
+In this section we will explore how to integrate maps in to your documents and applications. We will explore options for print maps in PDFs, to online  and/or interactive maps in web pages. We will also explore dynamic mapping using Shiny.
+
+
+##### 30 minutes break
+
+##### Part 6: Static Maps
+
+_from_ **11:30 - 12:05**
+
+Maps that are put in documents, and web pages. Maps than can be printed out. We will explore various mapping techniques, but primarily focused on ggplot2 based techniques.
+
+##### 5 minutes break
+
+##### Part 7: Interactive Maps
+
+_from_ **12:10 - 12:50**
+
+Maps meant for the web. Maps that users can interact with and explore in more details. Maps that can be changed dynamically in a Shiny application on user interaction.
+
+##### Question/Answers, Discussion
+
+_from_ **12:50 - 1:00**
+
+General discussion, and question and answers.

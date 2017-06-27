@@ -4,3 +4,7 @@
 ^README\.Rmd$
 ^README-.*\.png$
 ^docker$
+^build.done$
+^data-raw$
+^.*_cache$
+^gh-pages$

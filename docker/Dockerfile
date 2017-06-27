@@ -6,9 +6,10 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends \
   libprotobuf-dev protobuf-compiler \
   && install2.r evaluate learnr \
+  animation \
   maptools rmapshaper cleangeo gdistance spatstat \
   raster rasterVis \
-  ggalt hrbrthemes ggmap ggspatial \
+  ggthemes ggiraph ggalt hrbrthemes ggmap ggspatial \
   leaflet leaflet.minicharts leaflet.extras leaflet.esri \
   lawn geojson geojsonio geoaxe geonames \
   cartogram cartography tmap mapview \
@@ -44,3 +45,4 @@ RUN apt-get update \
   && installGithub.r arilamstein/choroplethrZip \
   && installGithub.r oswaldosantos/ggsn \
   && installGithub.r paleolimbot/ggspatial \
+  && installGithub.r dgrtwo/gganimate \

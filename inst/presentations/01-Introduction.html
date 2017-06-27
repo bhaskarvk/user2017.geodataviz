@@ -12,7 +12,7 @@
 class: center, middle, inverse, title-slide
 
 # Geospatial Visualization using R
-## UseR! 2017, Brussels
+## Part 1: Introduction
 ### Bhaskar V. Karambelkar
 ### 2017/07/04
 
@@ -21,7 +21,7 @@ class: center, middle, inverse, title-slide
 
 
 
-# Welcome!
+# Part 1: Welcome! / Bienvenue! / Welgekomen!
 
 --
 
@@ -29,12 +29,96 @@ class: center, middle, inverse, title-slide
 
 --
 
-- Speaker/Tutor Introduction
+- The Tutor/Presenter
+
+--
+
+- The Audience 
 
 --
 
 - Scope of the Tutorial
 
+--
+
+- Setup
+
+--
+
+- On to Part 2
+
+---
+
+# The Tutor/Presenter
+
+--
+
+- Probably the least knowledgeable person in this room when it comes to GIS.
+
+--
+
+- Works in Information Security. Don't you ever "CYBER" me!
+
+--
+
+- Loves maps and loves R.
+
+--
+
+- Had a boss who loves maps and R even more. Bob Rudis!
+
+--
+
+- Made some contributions to the 'leaflet' package.
+
+--
+
+- Now your turn!
+
+---
+
+# Obligatory Hello World! Get it?
+
+
+```r
+maps::map('world', fill=TRUE, col='#ffA50077', border='black', bg='#00000011')
+```
+
+&lt;img src="01-Introduction_files/figure-html/01-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Tutorial Scope
+
+- Part 1: Welcome! .gray[[9:30 - 9:50]]
+
+--
+
+- Part 2: R Packages .gray[[9:50 - 10:05]]
+
+--
+
+- Part 3: Spatial Data .gray[[10:05 - 10:20]]
+
+--
+
+- Part 4: Spatial Data Operations .gray[[10:25 - 11:40]]
+
+--
+
+- Part 5: Ways to Output Maps .gray[[10:40 - 11:00]]
+
+--
+
+- Part 6: Static Maps .gray[[11:30 - 12:05]]
+
+--
+
+- Part 7: Interactive Maps .gray[[12:10 - 12:50]]
+
+--
+
+- Part 8: Q/A .gray[[12:50 - 1:00]]
 
 ---
 
@@ -42,7 +126,7 @@ class: center, middle, inverse, title-slide
 
 --
 
-- Docker FTW!
+- [Docker](https://store.docker.com/search?type=edition&amp;offering=community) FTW!
 
 --
 
@@ -52,54 +136,23 @@ class: center, middle, inverse, title-slide
 
 - `docker pull bhaskarvk/rgeodataviz`
 
----
+--
 
-class: inverse center middle
-
-# Part 1: Spatial Data
-
----
-
-## Part 1.1: Spatail Data Structures in R
+- `docker run -d -p 8787:8787 --name rgeodataviz \` &lt;br/&gt;`bhaskarvk/rgeodataviz`
 
 --
 
-### Vector Data
-
-
-- [`sp`](https://cran.r-project.org/package=sp)
-
-- [`sf`](https://cran.r-project.org/package=sf)
-
-- [`geojson`](https://cran.r-project.org/package=geojson)
-
---
-
-### Raster Data
-
-- [`raster`](https://cran.r-project.org/package=raster)
-
-- [`rncdf4`](https://cran.r-project.org/package=rncdf4)
-
-- [`rhdf5`](https://bioconductor.org/packages/release/bioc/html/rhdf5.html)
+- Go to http://localhost:8787. You should see RStudio.
 
 ---
 
-## Part 1.2: Spatial Data Storage Formats  
+class: inverse middle
 
-- ArcGIS [shapefile](https://en.wikipedia.org/wiki/Shapefile)
+# Part 1: The End! 
 
-- [GeoJSON]() &amp; [TopoJSON]()
+Continue to [Part 2: R Packages](02-R_Packages.html)
 
-- [PostGIS]() and other spatial databases
-
-- [KML]()
-
-- [GeoTIFF](https://trac.osgeo.org/geotiff/)
-
-- [GeoPackage](http://www.geopackage.org/)
-
-- And Lots More
+.footnote[Restart [Part1](01-Introduction.html)]
     </textarea>
 <script src="libs/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

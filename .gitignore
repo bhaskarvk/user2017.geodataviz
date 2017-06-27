@@ -4,3 +4,6 @@
 .Ruserdata
 *.swp
 .DS_Store
+build.done
+**/*_cache
+gh-pages

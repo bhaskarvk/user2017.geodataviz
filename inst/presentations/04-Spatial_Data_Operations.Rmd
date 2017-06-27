@@ -1,0 +1,182 @@
+---
+title: "Geospatial Visualization using R"
+subtitle: "Part 4: Spatial Data Operations"
+author: "Bhaskar V. Karambelkar"
+date: "2017/07/04"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    chakra: libs/remark-latest.min.js
+    css: ["default", "xaringan-style.css"]
+    nature:
+      highlightStyle: zenburn
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      navigation:
+        scroll: false
+        click: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+# Selectiing features/fields `sp` objects
+
+```{r 04-01, echo=FALSE, include=FALSE}
+library(sp)
+data(meuse)
+coordinates(meuse) <- ~x+y
+proj4string(meuse) <- CRS("+init=epsg:28992")
+scot_BNG <- rgdal::readOGR(
+  dsn = system.file("vectors", package = "rgdal")[1],
+  layer = "scot_BNG")
+```
+
+```{r 04-02}
+dim(meuse@data)
+colnames(meuse@data)
+meuse[9:10, c('lead','zinc')]
+nrow(meuse[meuse$lead>quantile(meuse$lead,.75),])
+```
+
+---
+# Other Operations on `sp` objects
+
+--
+
+- `[[`: Data for single column `plot(hist(meuse[['zinc']]))`
+
+--
+
+- `[[<-`: Replace values of single column <br/> `meuse[['lead']] <- rnorm(nrow(meuse))`
+
+--
+
+- `proj4String` / `proj4String<-`: Returns / sets (w/o transforming) the CRS.
+
+--
+
+- `spTransform(meuse, CRS("+init=epsg:4326"))`: Convert from one CRS to another.
+
+--
+
+- `geometry(meuse)`: Strip the fields and return the bare geometry.
+
+--
+
+- `over(points, polygons, returnList=TRUE)`:<br/> Returns a list indicating which polygons contain each point in `points` data-set.
+
+--
+
+- `rgeos` / `gdistance` / `geosphere` / `maptools`:<br/>Contain many geometry and feature related operations.
+
+---
+
+# Example
+
+```{r 04-03, fig.height=5, fig.align='center'}
+par(mar=c(0,0,0,0))
+plot(scot_BNG, col='#aaaaaa', border=0)
+{{ plot(rgeos::gCentroid(scot_BNG, byid=TRUE), add=TRUE, pch=20) }}
+```
+
+---
+
+# Operations on `sf` Objects
+
+--
+
+- `sp` => `sf`
+
+```{r 04-04}
+suppressPackageStartupMessages(library(sf))
+{{ meuse_sf <- st_as_sf(meuse) }}
+as.data.frame(meuse_sf[1:2,c('lead', 'zinc', 'geometry')])
+```
+
+--
+
+- `st_geometry(sf)`: Just the geometry, the `sfc` column.
+
+--
+
+- `st_as_text(sfg)` / `st_as_binary(sfg)` convert to WKT and WKB resp.
+
+- `st_as_sfc()` for converting a foreign object into a `sfc`.
+
+--
+
+- Check out `methods(class='sfc')` for many more methods.<sup>1</sup>
+
+--
+
+.footnote[1 - Best place to start are the `sf` vignettes [here](https://cran.r-project.org/web/packages/sf/vignettes/sf1.html) & [here](https://cran.r-project.org/web/packages/sf/vignettes/sf3.html).]
+
+---
+
+# Example
+
+```{r 04-05, fig.height=5, fig.align='center'}
+{{ usa_sfg <- st_transform(st_geometry(albersusa::usa_sf()),                      albersusa::us_aeqd_proj) }}
+{{ usa_c <- st_centroid(usa_sfg) }}
+{{ usa_50 <- (usa_sfg - usa_c) * .50 + usa_c }}
+par(mar=c(0,0,0,0));plot(usa_sfg)
+plot(usa_50, add=TRUE, col='#FFA50077', border=0)
+plot(usa_c, add=TRUE, pch=20)
+```
+
+---
+
+# Operations on `raster` Objects
+
+```{r 04-06}
+suppressPackageStartupMessages(library(raster))
+r <- raster(system.file("external/test.grd", package="raster"))
+inMemory(r)
+nlayers(r)
+dim(r)
+cellStats(r, function(x, ...) 
+  c(min=min(x,...), mean=mean(x,...), max=max(x,...)))
+```
+
+---
+
+# Operations on `raster` Objects
+
+```{r 04-07, fig.align='center', fig.width=12,fig.height=6}
+{{ r_log <- calc(r, log) }}
+par(mar=c(5,5,5,5), mfrow=c(1,2))
+hist(r); hist(r_log)
+```
+
+
+---
+
+# Operations via External Tools
+
+--
+
+- `RQGIS`: Uses QGIS Python API and allows you to access many native and 3<sup>rd</sup>-party plugin based geospatial algorithms/analysis.
+
+--
+
+- `RQGIS` also allows you to access `GRASS7` and `SAGA`, but you also have option of using `rgrass7` and `RSAGA`.
+
+--
+
+- `rpostgis` & `postGIStools` allow you to access data in PostGIS, but so does the PostGIS driver in `gdal` so you can query directly from `rgdal` and `sf` too.
+
+---
+
+class: inverse middle
+
+# Part 4: The End! 
+
+Continue to [Part 5: Ways to Output Maps](05-Ways_To_Output_Maps.html)
+
+.footnote[Restart [Part 4: Spatial Data Operations](04-Spatial_Data_Operations.html)]
