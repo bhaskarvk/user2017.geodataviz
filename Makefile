@@ -1,4 +1,4 @@
-.PHONY: build clean
+.PHONY: all build publish clean
 
 RMD_FILES=$(shell find inst -name '*.Rmd')
 HTML_FILES=$(RMD_FILES:%.Rmd=%.html)
@@ -11,6 +11,8 @@ RENDER = Rscript -e "suppressMessages(library(rmarkdown)); render('$<', quiet=TR
 	@echo "\033[35m$< ==> $@\033[0m"
 	$(RENDER)
 
+all: build publish
+
 build: build.done
 
 build.done: $(HTML_FILES)
@@ -18,7 +20,9 @@ build.done: $(HTML_FILES)
 	Rscript -e 'devtools::install(upgrade_dependencies=F)'
 	touch $@
 
-docker:
+publish:
+	@echo "\033[35mSyncing with gh-pages\033[0m"
+	rsync -av  --exclude '*_cache' --exclude '*.Rmd' --exclude 'tutorials' inst/ ./gh-pages
 
 clean:
 	@echo "\033[35mCleaning ...\033[0m"
