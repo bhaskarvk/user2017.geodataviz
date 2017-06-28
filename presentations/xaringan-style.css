@@ -1,0 +1,31 @@
+.gray {color: #999;}
+.remark-code { font-size: 75%; white-space: normal; }
+.remark-inline-code { font-size: 90%; }
+p .remark-inline-code { background-color: #eee; }
+
+.remark-slide-content {
+  font-size: 24px;
+}
+
+.remark-code-line-highlighted {
+  background-color: #777;
+}
+
+h1 {
+    -webkit-margin-after: 0.25em;
+    color: orange;
+    margin-top: 0.75rem;
+}
+
+p {
+  color: #444444;
+}
+
+.footnote {
+  position: absolute;
+  bottom: 1em;
+  padding-right: 4em;
+  font-size: 75%;
+  color: #888;
+  font-style: italic;
+}
