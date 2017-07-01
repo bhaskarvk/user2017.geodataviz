@@ -21,7 +21,7 @@ Please do this well before the tutorial. The bandwidth at the venue could be ver
 
 - Either using the kitematic GUI tool or command line pull the `bhaskarvk/rgeodataviz` image.<br/>Command line: `docker pull bhaskarvk/rgeodataviz`
 
-
+If docker is not an option [here](https://gist.github.com/bhaskarvk/32b2a03a430a04a67664b85cad89c825) is a gist of all packages that are either directly or indirectly used for this tutorial.
 
 #### Structure of the Tutorial
 
@@ -29,17 +29,24 @@ This is going to be whirlwind tour of options for plotting spatial data using R.
 
 ##### Part 1: Introduction
 
+**[Slides](presentations/01-Introduction.html)**
+
 _from_ **9:30 - 9:50**
 
 I will go over the objectives and the scope of the tutorial, introduce myself, get to know the audience a bit. We will also try and solve any last minute setup issues, in case someone has them.
 
 ##### Part 2: R Packages
 
+
+**[Slides](presentations/02-R_Packages.html)**
+
 _from_ **9:50 - 10:05**
 
 In this part I will briefly go over some major R packages available for working with spatial data. We will cover R packages for data containers, reading/writing external data, spatial operations, and finally plotting spatial data.
 
 ##### Part 3: Spatial Data
+
+**[Slides](presentations/03-Spatial_Data.html)**
 
 _from_ **10:05 - 10:20**
 
@@ -49,11 +56,17 @@ Here we will go over the major R packages for storing spatial data in an R envir
 
 ##### Part 4: Spatial Data Operations
 
+
+**[Slides](presentations/04-Spatial_Data_Operations.html)**
+
 _from_ **10:25 - 10:40**
 
 Here we will explore some common spatial operations on data. This involves sub-setting, joining spatial data. Determining centroids, convex hulls, voronoi regions etc. 
 
 ##### Part 5: Ways to Output Maps
+
+
+**[Slides](presentations/05-Ways_to_Output_Maps.html)**
 
 _from_ **10:40 - 11:00** 
 
@@ -64,6 +77,9 @@ In this section we will explore how to integrate maps in to your documents and a
 
 ##### Part 6: Static Maps
 
+
+**[Slides](presentations/06-Static_Maps.html)**
+
 _from_ **11:30 - 12:05**
 
 Maps that are put in documents, and web pages. Maps than can be printed out. We will explore various mapping techniques, but primarily focused on ggplot2 based techniques.
@@ -71,6 +87,9 @@ Maps that are put in documents, and web pages. Maps than can be printed out. We 
 ##### 5 minutes break
 
 ##### Part 7: Interactive Maps
+
+
+**[Slides](presentations/01-Interactive_Maps.html)**
 
 _from_ **12:10 - 12:50**
 
