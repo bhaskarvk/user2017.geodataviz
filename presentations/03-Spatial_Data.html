@@ -83,14 +83,7 @@ class: inverse center middle
 
 
 ```r
-library(sp)
-```
-
-```
-## Loading required package: methods
-```
-
-```r
+suppressPackageStartupMessages(library(sp))
 data(meuse)
 class(meuse)
 ```
@@ -224,15 +217,7 @@ class(scot_BNG)
 
 ```r
 library(sf)
-```
-
-```
-## Linking to GEOS 3.5.1, GDAL 2.1.3, proj.4 4.9.2, lwgeom 2.3.2 r15302
-```
-
-```r
-dsn &lt;- system.file("vectors", package = "rgdal")[1]
-* scot_BNG &lt;- sf::st_read(dsn, 'scot_BNG') 
+* scot_BNG &lt;- sf::st_read(system.file("vectors", package = "rgdal")[1], 'scot_BNG') 
 ```
 
 ```
