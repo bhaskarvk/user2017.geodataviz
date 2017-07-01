@@ -1,0 +1,430 @@
+---
+title: "Geospatial Visualization using R"
+subtitle: "Part 6: Static Maps"
+author: "Bhaskar V. Karambelkar"
+date: "2017/07/04"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    chakra: libs/remark-latest.min.js
+    css: ["default", "xaringan-style.css"]
+    nature:
+      highlightStyle: zenburn
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      navigation:
+        scroll: false
+        click: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(dev = 'svg')
+options(htmltools.dir.version = FALSE)
+options(device = function(file, width, height) {
+  svg(tempfile(), width = width, height = height)
+})
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+# Ways To Create Static Maps
+
+--
+
+- Base plotting
+
+--
+
+- `ggplot2` and related packages
+
+--
+
+- Ease-of-use packages
+
+--
+
+  - `tmap`
+  - `choroplethr`
+  - `cartography`
+  - `ggmap`
+
+---
+
+# Plotting with Base R: Sample 1
+
+--
+
+- `plot()` works on all spatial objects. `plot(..., add=TRUE)` to overlay.
+
+--
+
+- Can be cumbersome to create production-ready maps.
+
+--
+
+```{r 06-00}
+suppressPackageStartupMessages(library(sp))
+demo(meuse, ask = FALSE, echo = FALSE) 
+crs.longlat = CRS("+init=epsg:4326")
+meuse.longlat = spTransform(meuse, crs.longlat)
+meuse.riv.longlat <- spTransform(meuse.riv, crs.longlat)
+grid.lines <- gridlines(meuse.longlat)
+```
+
+```{r 06-01, eval=FALSE}
+par(mar = c(1, 1, 1, 1))
+plot(methods::as(meuse.longlat, "Spatial"), expandBB=c(0.05,0,0.1,0))
+plot(grid.lines, add = TRUE, col = grey(.8))
+plot(meuse.longlat, pch=1, cex = sqrt(meuse$zinc)/12, add = TRUE)
+text(labels(grid.lines, side=2:3), col = grey(.7), offset=1.5)
+v = c(100,200,400,800,1600)
+legend("bottomright", legend = v, pch = 1, pt.cex = sqrt(v)/12,
+       text.col =grey(.8), box.col=grey(0.8), title='Zinc Conc. (ppm)')
+plot(meuse.riv.longlat, add = TRUE, col = grey(.9, alpha = .5))
+```
+
+---
+
+# Plotting with Base R: Sample 1
+
+```{r 06-02, echo=FALSE,  fig.width=6.5, fig.height=5.5, fig.align='center'}
+par(mar = c(1, 1, 1, 1))
+plot(as(meuse.longlat, "Spatial"), expandBB=c(0.05,0,0.1,0))
+plot(grid.lines, add = TRUE, col = grey(.8))
+plot(meuse.longlat, pch=1, cex = sqrt(meuse$zinc)/12, add = TRUE)
+text(labels(grid.lines, side=2:3), col = grey(.7), offset=1.5)
+v = c(100,200,400,800,1600)
+legend("bottomright", legend = v, pch = 1, pt.cex = sqrt(v)/12,
+       text.col =grey(.8), box.col=grey(0.8), title='Zinc Conc. (ppm)')
+plot(meuse.riv.longlat, add = TRUE, col = grey(.9, alpha = .5))
+```
+
+---
+
+# Plotting with Base R: Sample 2
+
+```{r 06-03, eval=FALSE}
+library(maps)
+data(world.cities)
+world.cities <- world.cities[world.cities$pop>1000000,]
+coordinates(world.cities) <- ~long+lat 
+proj4string(world.cities) <- '+init=epsg:4326'
+
+world <- rnaturalearth::countries110
+world <- world[world$name != 'Antarctica',]
+
+grid.lines.mj <- gridlines(world,easts = seq(-180,180,by=30), norths = seq(-90,90,by=30))
+grid.lines.mi <- gridlines(world,easts = seq(-165,195,by=15), norths = seq(-90,90,by=15))
+
+par(mar = c(8, 0.1, 0.1, 0.1))
+plot(methods::as(world, 'Spatial'), expandBB=c(0,0,0.05,0.05))
+plot(world, add=TRUE, border=grey(0.2))
+plot(grid.lines.mi, col=grey(0.95), add=T)
+plot(grid.lines.mj, col=grey(0.9), add=T)
+text(labels(grid.lines.mj, side=1:2, col = grey(.6), offset=0.3)
+plot(world.cities, add=TRUE, col='#FF5A0088', pch=20,
+     cex=world.cities$pop/2000000)
+v = c(1,4,8,12)
+legend("topright", legend = v, pch = 20, pt.cex = v/2,
+       text.col =grey(.7), box.col=grey(0.9), col = '#FF5A0088',
+       title='Pop. (Millions)', horiz =T)
+```
+
+---
+
+# Plotting with Base R: Sample 2
+
+```{r 06-04, echo=FALSE,  fig.width=10, fig.height=7, fig.align='center'}
+library(maps)
+data(world.cities)
+world.cities <- world.cities[world.cities$pop>1000000,]
+coordinates(world.cities) <- ~long+lat 
+proj4string(world.cities) <- '+init=epsg:4326'
+
+world <- rnaturalearth::countries110
+world <- world[world$name != 'Antarctica',]
+
+grid.lines.mj <- gridlines(world,easts = seq(-180,180,by=30), norths = seq(-90,90,by=30))
+grid.lines.mi <- gridlines(world,easts = seq(-165,195,by=15), norths = seq(-90,90,by=15))
+world.cities <- spTransform(world.cities, CRS("+proj=wintri"))
+world <- spTransform(world, CRS("+proj=wintri"))
+grid.lines.mj <- spTransform(grid.lines.mj,CRS("+proj=wintri"))
+grid.lines.mi <- spTransform(grid.lines.mi,CRS("+proj=wintri"))
+
+par(mar = c(8, 0.1, 0.1, 0.1))
+plot(methods::as(world, 'Spatial'), expandBB=c(0,0,0.05,0.05))
+
+plot(grid.lines.mi, col=grey(0.95), add=T)
+plot(grid.lines.mj, col=grey(0.9), add=T)
+text(labels(grid.lines.mj, side=1:2, labelCRS = CRS("+init=epsg:4326")), col = grey(.6), offset=0.3)
+
+plot(world, add=TRUE, border=grey(0.2), col=grey(0.9))
+plot(world.cities, add=TRUE, col='#FF5A0088', pch=20,
+     cex=world.cities$pop/2000000)
+
+v = c(1,4,8,12)
+legend("topright", legend = v, pch = 20, pt.cex = v/2,
+       text.col =grey(.7), box.col=grey(0.9),
+       col = '#FF5A0088',
+       title='Pop. (Millions)', horiz =T)
+```
+
+---
+
+# Plotting with Base R: Sampl 2
+
+--
+
+- Actually I cheated with the last plot. 
+
+--
+
+- The plot you saw as plotted in [Winkel Triple](https://en.wikipedia.org/wiki/Winkel_tripel_projection) projection, while the code was using lat/long values.
+
+--
+
+- Before the `par(...)` line we need to convert all the data to our target projection.
+
+```{r 06-05, eval=FALSE}
+world <- spTransform(world, CRS("+proj=wintri"))
+world.cities <- spTransform(world.cities, CRS("+proj=wintri"))
+grid.lines.mj <- spTransform(grid.lines.mj,CRS("+proj=wintri"))
+grid.lines.mi <- spTransform(grid.lines.mi,CRS("+proj=wintri"))
+
+```
+
+--
+
+- But the lables were showing lat/long values, how come ?
+
+--
+
+```{r 06-06, eval=FALSE}
+text(labels(grid.lines.mj, side=1:2, labelCRS = CRS("+init=epsg:4326")),
+     col = grey(.6), offset=0.3)
+```
+
+--
+
+- [projectionwizard.org](http://projectionwizard.org/) helps you determine sensible projection/s for your data.
+
+---
+
+# Plotting with Base R: Miscellaneous Notes
+
+
+- `sp::gridlines()`, `sp::graiddata()`, `sp::labels()`, `sp::text()`: <br/> Creates and plot EW and NS grid lines
+
+--
+
+- `sp::bbox()` / `sp::bbexpand()`: Retrieves / expands the bounding-box of a spatial object.
+
+--
+
+- Raster data is plotted similar to vector data, but for reprojecting rasters use `raster::projectRaster()` instead of `sp::Transform()`.
+
+--
+
+- [`sp` Gallery](https://edzer.github.io/sp/) is probably the best source for advanced `sp` plotting using base R graphics. 
+
+--
+
+- [`sf` Plotting](http://r-spatial.org/r/2017/01/12/newssf.html) is discussed in detail by Edzer Pebesma, the author of `sf`.
+
+--
+
+- Robin Lovelace maintains a really good [repository](https://github.com/Robinlovelace/Creating-maps-in-R) intruducing spatial visualization in R.
+
+--
+
+- Zev Ross (again!) has a very good [blog post](http://zevross.com/blog/2015/03/30/map-and-analyze-raster-data-in-r/) for working with raster data in R.
+
+---
+
+# Plotting with `ggplot2`: Slide 1
+
+```{r 06-07}
+world <- rnaturalearth::countries110
+europe <- world[world$region_un=="Europe"&world$name!='Russia',]
+# plot(europe)
+
+# Let's add a unique ID column to our data.
+{{europe@data$id <- row.names(europe@data)}}
+
+# A bounding box for continental Europe.
+europe.bbox <- SpatialPolygons(list(Polygons(list(Polygon(
+  matrix(c(-25,29,45,29,45,75,-25,75,-25,29),byrow = T,ncol = 2)
+)), ID = 1)), proj4string = CRS(proj4string(europe)))
+
+# Get polygons that are only in continental Europe.
+europe.clipped <-
+{{  rgeos::gIntersection(europe, europe.bbox, byid = TRUE, id=europe$id)}}
+
+```
+
+- `ggplot2` requires tidy data, which `sp` objects are not.
+
+```{r 06-08}
+europe.tidy <- broom::tidy(europe.clipped)
+europe.tidy <- dplyr::left_join(europe.tidy, europe@data, by='id')
+```
+
+---
+
+# Plotting with `ggplot2`: Plot 1
+
+- Ready to make a production grade map?
+
+--
+
+```{r 06-09, eval=FALSE}
+library(ggplot2)
+ggplot(europe.tidy, aes(long,lat, group=group,fill=gdp_md_est/1000)) +
+  geom_polygon(alpha=0.8,color='black') +
+  coord_map("azequalarea") +
+  hrbrthemes::theme_ipsum_rc() +
+  viridis::scale_fill_viridis(
+    name='Median GDP \n(in Billions)', direction = -1, labels=scales::dollar) +
+  labs(x=NULL, y=NULL, 
+       title='Median GDP Estimates of\nContinental Europe & Iceland',
+       caption='Source: http://www.naturalearthdata.com/')
+
+```
+
+
+---
+
+# Plotting with `ggplot2`: Plot 1
+
+```{r 06-10, echo=FALSE,  fig.width=10, fig.height=6, fig.align='center'}
+library(ggplot2)
+ggplot(europe.tidy, aes(long,lat, group=group,fill=gdp_md_est/1000)) +
+  geom_polygon(alpha=0.8,color='black') +
+  coord_map("azequalarea") +
+  hrbrthemes::theme_ipsum_rc() +
+  viridis::scale_fill_viridis(
+    name='Median GDP \n(in Billions)', direction = -1, labels=scales::dollar) +
+  labs(x=NULL, y=NULL, 
+       title='Median GDP Estimates of\nContinental Europe & Iceland',
+       caption='Source: http://www.naturalearthdata.com/')
+
+```
+
+---
+
+# Plotting with `ggplot2`: Plot 2
+
+- Now let's do the last plot with `sf`.
+
+--
+
+```{r 06-11, eval=FALSE}
+library(sf)
+
+world <- st_as_sf(rnaturalearth::countries110)
+europe <- dplyr::filter(world, region_un=="Europe" & name!='Russia')
+
+# A bounding box for continental Europe.
+europe.bbox <- st_polygon(list(
+  matrix(c(-25,29,45,29,45,75,-25,75,-25,29),byrow = T,ncol = 2)))
+
+europe.clipped <- europe %>% 
+  dplyr::filter(as.logical(st_contains(europe.bbox, europe, sparse = F)))
+
+ggplot(europe.clipped, aes(fill=gdp_md_est/1000)) +
+  geom_sf(alpha=0.8,col='white') +
+   coord_sf(crs="+proj=aea +lat_1=36.333333333333336 +lat_2=65.66666666666667 +lon_0=14") +
+  hrbrthemes::theme_ipsum_rc() +
+  viridis::scale_fill_viridis(
+    name='Median GDP \n(in Billions)', direction = -1, labels=scales::dollar) +
+  labs(x=NULL, y=NULL, title=NULL,
+       caption='Source: http://www.naturalearthdata.com/')
+```
+
+---
+
+# Plotting with `ggplot2`: Plot 2
+
+```{r 06-12, echo=FALSE,  fig.width=10, fig.height=6, fig.align='center'}
+suppressPackageStartupMessages(library(sf))
+
+world <- st_as_sf(rnaturalearth::countries110)
+europe <- dplyr::filter(world, region_un=="Europe" & name!='Russia')
+
+# A bounding box for continental Europe.
+europe.bbox <- st_polygon(list(
+  matrix(c(-25,29,45,29,45,75,-25,75,-25,29),byrow = T,ncol = 2)))
+
+europe.clipped <- europe %>% 
+  dplyr::filter(as.logical(st_contains(europe.bbox, europe, sparse = F)))
+
+ggplot(europe.clipped, aes(fill=gdp_md_est/1000)) +
+  geom_sf(alpha=0.8,col='white') +
+  coord_sf(crs="+proj=aea +lat_1=36.333333333333336 +lat_2=65.66666666666667 +lon_0=14") +
+  hrbrthemes::theme_ipsum_rc() +
+  viridis::scale_fill_viridis(
+    name='Median GDP \n(in Billions)', direction = -1, labels=scales::dollar) +
+  labs(x=NULL, y=NULL, title=NULL,
+       caption='Source: http://www.naturalearthdata.com/')
+```
+
+---
+
+# Plotting with `ggplot2`: Raster Data
+
+```{r 06-13, fig.width=6, fig.height=4, fig.align='center'}
+suppressPackageStartupMessages(library(raster))
+#suppressPackageStartupMessages(library(rasterVis))
+r <- raster(system.file("external/test.grd", package="raster"))
+
+{{rasterVis::gplot(r) + geom_tile(aes(fill = value)) }} +
+  viridis::scale_fill_viridis(direction = -1, na.value='#FFFFFF00') +
+  coord_equal() + hrbrthemes::theme_ipsum()
+```
+
+---
+
+# Plotting with Ease-of-Use Pkgs: ggmap
+
+---
+
+# Plotting with Ease-of-Use Pkgs: ggmap
+
+---
+
+
+# Plotting with Ease-of-Use Pkgs: tmap
+
+---
+
+# Plotting with Ease-of-Use Pkgs: tmap
+
+---
+
+
+# Plotting with Ease-of-Use Pkgs: cartography
+
+---
+
+# Plotting with Ease-of-Use Pkgs: cartography
+
+---
+
+
+# Plotting with Ease-of-Use Pkgs: choroplethr
+
+---
+
+# Plotting with Ease-of-Use Pkgs: chorophethr
+
+---
+
+class: inverse middle
+
+# Part 5: The End!
+
+Continue to [Part 6: Dynamic Maps](05-Dynamic Maps.html)
+
+.footnote[Restart [Part 6: Static Maps](05-Static Maps.html)]

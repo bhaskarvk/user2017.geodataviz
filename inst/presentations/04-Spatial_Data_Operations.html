@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Geospatial Visualization using R</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Bhaskar V. Karambelkar" />
+    <link href="libs/remark-css/example.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Geospatial Visualization using R
+## Part 4: Spatial Data Operations
+### Bhaskar V. Karambelkar
+### 2017/07/04
+
+---
+
+
+
+
+# Selectiing features/fields `sp` objects
+
+
+
+
+```r
+dim(meuse@data)
+```
+
+```
+## [1] 155  12
+```
+
+```r
+colnames(meuse@data)
+```
+
+```
+##  [1] "cadmium" "copper"  "lead"    "zinc"    "elev"    "dist"    "om"     
+##  [8] "ffreq"   "soil"    "lime"    "landuse" "dist.m"
+```
+
+```r
+meuse[9:10, c('lead','zinc')]
+```
+
+```
+##         coordinates lead zinc
+## 9  (181060, 333231)  133  347
+## 10 (181232, 333168)   80  183
+```
+
+```r
+nrow(meuse[meuse$lead&gt;quantile(meuse$lead,.75),])
+```
+
+```
+## [1] 38
+```
+
+---
+# Other Operations on `sp` objects
+
+--
+
+- `[[`: Data for single column `plot(hist(meuse[['zinc']]))`
+
+--
+
+- `[[&lt;-`: Replace values of single column &lt;br/&gt; `meuse[['lead']] &lt;- rnorm(nrow(meuse))`
+
+--
+
+- `proj4String` / `proj4String&lt;-`: Returns / sets (w/o transforming) the CRS.
+
+--
+
+- `spTransform(meuse, CRS("+init=epsg:4326"))`: Convert from one CRS to another.
+
+--
+
+- `geometry(meuse)`: Strip the fields and return the bare geometry.
+
+--
+
+- `over(points, polygons, returnList=TRUE)`:&lt;br/&gt; Returns a list indicating which polygons contain each point in `points` data-set.
+
+--
+
+- `rgeos` / `gdistance` / `geosphere` / `maptools`:&lt;br/&gt;Packages contain many geometry and feature related operations.
+
+---
+
+# Example
+
+
+```r
+par(mar=c(0,0,0,0))
+plot(scot_BNG, col='#aaaaaa', border=0)
+* plot(rgeos::gCentroid(scot_BNG, byid=TRUE), add=TRUE, pch=20) 
+```
+
+&lt;img src="04-Spatial_Data_Operations_files/figure-html/04-03-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Operations on `sf` Objects
+
+--
+
+- `sp` =&gt; `sf`
+
+
+```r
+suppressPackageStartupMessages(library(sf))
+* meuse_sf &lt;- st_as_sf(meuse) 
+as.data.frame(meuse_sf[1:2,c('lead', 'zinc', 'geometry')])
+```
+
+```
+##   lead zinc             geometry
+## 1  299 1022 POINT(181072 333611)
+## 2  277 1141 POINT(181025 333558)
+```
+
+--
+
+- `st_geometry(sf)`: Just the geometry, the `sfc` column.
+
+--
+
+- `st_as_text(sfg)` / `st_as_binary(sfg)` convert to WKT and WKB resp.
+
+- `st_as_sfc()` for converting a foreign object into a `sfc`.
+
+--
+
+- Check out `methods(class='sfc')` for many more methods.&lt;sup&gt;1&lt;/sup&gt;
+
+--
+
+.footnote[1 - Best place to start are the `sf` vignettes [here](https://cran.r-project.org/web/packages/sf/vignettes/sf1.html) &amp; [here](https://cran.r-project.org/web/packages/sf/vignettes/sf3.html).]
+
+---
+
+# Example
+
+
+```r
+* usa_sfg &lt;- st_transform(st_geometry(albersusa::usa_sf()),                      albersusa::us_aeqd_proj) 
+* usa_c &lt;- st_centroid(usa_sfg) 
+* usa_50 &lt;- (usa_sfg - usa_c) * .50 + usa_c 
+par(mar=c(0,0,0,0));plot(usa_sfg)
+plot(usa_50, add=TRUE, col='#FFA50077', border=0)
+plot(usa_c, add=TRUE, pch=20)
+```
+
+&lt;img src="04-Spatial_Data_Operations_files/figure-html/04-05-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Operations on `raster` Objects
+
+
+```r
+suppressPackageStartupMessages(library(raster))
+r &lt;- raster(system.file("external/test.grd", package="raster"))
+inMemory(r)
+```
+
+```
+## [1] FALSE
+```
+
+```r
+nlayers(r)
+```
+
+```
+## [1] 1
+```
+
+```r
+dim(r)
+```
+
+```
+## [1] 115  80   1
+```
+
+```r
+cellStats(r, function(x, ...) 
+  c(min=min(x,...), mean=mean(x,...), max=max(x,...)))
+```
+
+```
+##       min      mean       max 
+##  128.4340  423.1647 1805.7800
+```
+
+---
+
+# Operations on `raster` Objects
+
+
+```r
+* r_log &lt;- calc(r, log) 
+par(mar=c(5,5,5,5), mfrow=c(1,2))
+hist(r); hist(r_log)
+```
+
+&lt;img src="04-Spatial_Data_Operations_files/figure-html/04-07-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Operations via External Tools
+
+--
+
+- `RQGIS`: Uses QGIS Python API and allows you to access many native and 3&lt;sup&gt;rd&lt;/sup&gt;-party plugin based geospatial algorithms/analysis.
+
+--
+
+- `RQGIS` also allows you to access `GRASS7` and `SAGA`, but you also have option of using `rgrass7` and `RSAGA`.
+
+--
+
+- `rpostgis` &amp; `postGIStools` allow you to access data in PostGIS, but so does the PostGIS driver in `gdal` so you can query directly from `rgdal` and `sf` too.
+
+---
+
+class: inverse middle
+
+# Part 4: The End! 
+
+Continue to [Part 5: Ways to Output Maps](05-Ways_To_Output_Maps.html)
+
+.footnote[Restart [Part 4: Spatial Data Operations](04-Spatial_Data_Operations.html)]
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "zenburn",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false,
+"click": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

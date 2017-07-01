@@ -73,7 +73,7 @@ nrow(meuse[meuse$lead>quantile(meuse$lead,.75),])
 
 --
 
-- `rgeos` / `gdistance` / `geosphere` / `maptools`:<br/>Contain many geometry and feature related operations.
+- `rgeos` / `gdistance` / `geosphere` / `maptools`:<br/>Packages contain many geometry and feature related operations.
 
 ---
 

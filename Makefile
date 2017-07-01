@@ -17,7 +17,7 @@ build: build.done
 
 build.done: $(HTML_FILES)
 	@echo "\033[35mBuilding Package\033[0m"
-	Rscript -e 'devtools::install(upgrade_dependencies=F)'
+	#Rscript -e 'devtools::install(upgrade_dependencies=F)'
 	touch $@
 
 publish:

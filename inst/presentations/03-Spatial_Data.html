@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Geospatial Visualization using R</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Bhaskar V. Karambelkar" />
+    <link href="libs/remark-css/example.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Geospatial Visualization using R
+## Part 3: Spatial Data
+### Bhaskar V. Karambelkar
+### 2017/07/04
+
+---
+
+
+
+
+# Part3: Spatial Data
+
+--
+
+- Vector Data
+
+--
+
+- Raster Data
+
+--
+
+- Spatio-Temporal Data
+
+--
+
+- Multi-Dimensional Spatial Data
+
+---
+
+class: inverse center middle
+
+# Vector Data
+
+---
+
+# The `sp` Package
+
+--
+
+- **`sp`** package contains S4 classes to represent 2D vector data.
+
+--
+
+- Line / Lines / Polygon / Polygons
+
+--
+
+- SpatialPoints / SpatialMultiPoints / SpatialLines / SpatialPolygons
+
+--
+
+- SpatialPointsDataFrame (SPnDF), SMPnPDF, SLDF, SPoDF (Not really data.frame objects)
+
+--
+
+- `rgdal::readOGR` function returns `sp` object/s from data stored in files.
+
+--
+
+- Not compatible with the 'tidyverse' way, and `sp` operations can be slow.
+
+--
+
+- `ggplot2` + `sp` is cumbersome as we shall see in Part 5.
+
+---
+
+# A smaple `sp` Object
+
+
+```r
+suppressPackageStartupMessages(library(sp))
+data(meuse)
+class(meuse)
+```
+
+```
+## [1] "data.frame"
+```
+
+```r
+colnames(meuse)
+```
+
+```
+##  [1] "x"       "y"       "cadmium" "copper"  "lead"    "zinc"    "elev"   
+##  [8] "dist"    "om"      "ffreq"   "soil"    "lime"    "landuse" "dist.m"
+```
+
+```r
+* coordinates(meuse) &lt;- ~x+y 
+* proj4string(meuse) &lt;- CRS("+init=epsg:28992")  # see footnote 1.
+class(meuse)
+```
+
+```
+## [1] "SpatialPointsDataFrame"
+## attr(,"package")
+## [1] "sp"
+```
+
+.footnote[1: See this [PDF](https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/OverviewCoordinateReferenceSystems.pdf) for CRS support in R.]
+---
+
+# Plot a `sp` Object
+
+
+```r
+plot(meuse); box(); title('The meuse dataset')
+```
+
+&lt;img src="03-Spatial_Data_files/figure-html/sp-02-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Read a `sp` Object
+
+
+```r
+# For some fun and enlightenment run w/o suppressing the output.
+suppressPackageStartupMessages(library(rgdal))
+dsn &lt;- system.file("vectors", package = "rgdal")[1]
+ # Uncomment and See
+# ogrInfo(dsn=dsn, layer="scot_BNG")
+# OGRSpatialRef(dsn=dsn, layer="scot_BNG")
+
+* scot_BNG &lt;- readOGR(dsn=dsn, layer="scot_BNG") 
+```
+
+```
+## OGR data source with driver: ESRI Shapefile 
+## Source: "/home/bhaskar/Library/R/3.x/cran/rgdal/vectors", layer: "scot_BNG"
+## with 56 features
+## It has 13 fields
+```
+
+```r
+class(scot_BNG)
+```
+
+```
+## [1] "SpatialPolygonsDataFrame"
+## attr(,"package")
+## [1] "sp"
+```
+
+---
+
+# Simple Features
+
+--
+
+- Simple Features is a two part OGC and ISO standard for common storage and access model of 2D geometries.
+
+--
+
+- Part one defines a hierarchy of classes and their textual and binary representation using Well-known text (WKT) and binary (WKB) formats.
+
+--
+
+- e.g. `POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))` ![](https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/SFA_Polygon.svg/51px-SFA_Polygon.svg.png)
+
+--
+
+- Part two specifies the SQL interface to access this data.
+
+--
+
+- Everything on this slide came straight from the Wikipedia entry for [Simple Features](https://en.wikipedia.org/wiki/Simple_Features) and [Well-known text](https://en.wikipedia.org/wiki/Well-known_text).
+
+---
+
+# The `sf` Package
+
+--
+
+- The `sf` package is the implementation of Simple Features Access standard.
+
+--
+
+- Instead of S4 classes, uses `data.frame`s with `list-columns` for storing geometries.
+
+--
+
+- Way more faster than `sp` and plays nicely with `tidyverse` packages.
+
+--
+
+- Easy to plot with `ggplot2` or `leaflet`.
+
+--
+
+- Also unlike `sp`, a single `sf` object can contain geometries of different kinds.
+
+--
+
+- `sf` functions start with `st`, `sfg` is the geometry of a feature,&lt;br/&gt; `sfc` is the list-column of a `sf` `data.frame` object containing a list of geometries.
+
+---
+
+# Sample `sf` Object
+
+
+```r
+library(sf)
+* scot_BNG &lt;- sf::st_read(system.file("vectors", package = "rgdal")[1], 'scot_BNG') 
+```
+
+```
+## Reading layer `scot_BNG' from data source `/home/bhaskar/Library/R/3.x/cran/rgdal/vectors' using driver `ESRI Shapefile'
+## Simple feature collection with 56 features and 13 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 7094.552 ymin: 529495 xmax: 468285.5 ymax: 1218342
+## epsg (SRID):    NA
+## proj4string:    +proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +datum=OSGB36 +units=m +no_defs
+```
+
+```r
+names(scot_BNG)
+```
+
+```
+##  [1] "SP_ID"    "NAME"     "ID_x"     "COUNT"    "SMR"      "LONG"    
+##  [7] "LAT"      "PY"       "EXP_"     "AFF"      "X_COOR"   "Y_COOR"  
+## [13] "ID_y"     "geometry"
+```
+
+---
+
+class: inverse center middle
+
+# Raster Data 
+
+---
+
+# The `raster` package
+
+- Defines `RasterLayer` / `RasterStack` / `RasterBrick` classes.
+
+- Defines operations on raster data.
+
+--
+
+## Sample `raster` object
+
+
+```r
+suppressPackageStartupMessages(library(raster))
+* r &lt;- raster(system.file("external/test.grd", package="raster")) 
+class(r)
+```
+
+```
+## [1] "RasterLayer"
+## attr(,"package")
+## [1] "raster"
+```
+
+---
+
+# Plot a `raster` object
+
+
+```r
+* plot(r)  
+plot(meuse, add=T) # Add Vector Data
+box(); title('Raster + Vector')
+```
+
+&lt;img src="03-Spatial_Data_files/figure-html/raster-02-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: inverse middle
+
+# Part 3: The End! 
+
+Continue to [Part 4: Spatial Data Operations](04-Spatial_Data_Operations.html)
+
+.footnote[Restart [Part3](03-Spatial_Data.html)]
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "zenburn",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false,
+"click": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

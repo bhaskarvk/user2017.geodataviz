@@ -85,7 +85,7 @@ class: inverse center middle
 # A smaple `sp` Object
 
 ```{r sp-01}
-library(sp)
+suppressPackageStartupMessages(library(sp))
 data(meuse)
 class(meuse)
 colnames(meuse)
@@ -177,8 +177,7 @@ class(scot_BNG)
 
 ```{r sf-01}
 library(sf)
-dsn <- system.file("vectors", package = "rgdal")[1]
-{{ scot_BNG <- sf::st_read(dsn, 'scot_BNG') }}
+{{ scot_BNG <- sf::st_read(system.file("vectors", package = "rgdal")[1], 'scot_BNG') }}
 names(scot_BNG)
 ```
 
