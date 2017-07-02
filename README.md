@@ -1,4 +1,3 @@
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 Geospatial Data Visualization using R
 =====================================
 

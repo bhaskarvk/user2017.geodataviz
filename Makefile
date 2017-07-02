@@ -1,6 +1,6 @@
 .PHONY: all build publish clean
 
-RMD_FILES=$(shell find inst -name '*.Rmd')
+RMD_FILES=$(shell find . -name '*.Rmd')
 HTML_FILES=$(RMD_FILES:%.Rmd=%.html)
 CACHE_DIRS=$(RMD_FILES:%.Rmd=%_cache)
 FIGURE_DIRS=$(RMD_FILES:%.Rmd=%_files)
