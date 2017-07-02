@@ -33,7 +33,7 @@ knitr::opts_chunk$set(cache = TRUE)
 
 --
 
-- Save to a static image in one of the raster formats.<br/><br/>`.jpg`/`.bmp` use lossy & `.tiff`/`.png` use lossless compression. (TIFF are huge!)
+- Save to a static image in one of the raster formats.<br/><br/>`.jpg` uses lossy & `bmp`/`.tiff`/`.png` use lossless compression. (TIFF are huge!)
 
 --
 
@@ -221,7 +221,7 @@ knitr::opts_chunk$set(cache = TRUE)
 
 --
 
-- For rockstar status mapping you can combine `htmlwidgets` + `crosstalk` + `shiny`.
+- For wizzard level mapping you can combine `htmlwidgets` + `crosstalk` + `shiny`.
 
 
 

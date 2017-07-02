@@ -56,7 +56,7 @@ knitr::opts_chunk$set(cache = TRUE)
 
 --
 
-- Probably the least knowledgeable person in this room when it comes to GIS.
+- Day job is not GIS related, but it's a hobby that I take very seriously.
 
 --
 
@@ -72,7 +72,7 @@ knitr::opts_chunk$set(cache = TRUE)
 
 --
 
-- Made some contributions to the 'leaflet' package.
+- Contributor to the 'leaflet' package, and author of `leaflet.extras`/`leaflet.esri`/`tilegramsR`/`widgetframe` packages.
 
 --
 

@@ -157,7 +157,7 @@ class(scot_BNG)
 
 --
 
-- Way more faster than `sp` and plays nicely with `tidyverse` packages.
+- Way faster than `sp` and plays nicely with `tidyverse` packages.
 
 --
 
