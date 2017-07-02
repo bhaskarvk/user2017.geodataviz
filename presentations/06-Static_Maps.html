@@ -125,7 +125,7 @@ legend("topright", legend = v, pch = 20, pt.cex = v/2,
 
 ---
 
-# Plotting with Base R: Sampl 2
+# Plotting with Base R: Sample 2
 
 --
 
@@ -133,7 +133,7 @@ legend("topright", legend = v, pch = 20, pt.cex = v/2,
 
 --
 
-- The plot you saw as plotted in [Winkel Triple](https://en.wikipedia.org/wiki/Winkel_tripel_projection) projection, while the code was using lat/long values.
+- The plot you saw as plotted in [Winkel triple](https://en.wikipedia.org/wiki/Winkel_tripel_projection) projection, while the code was using lat/long values.
 
 --
 
@@ -196,7 +196,7 @@ text(labels(grid.lines.mj, side=1:2, labelCRS = CRS("+init=epsg:4326")),
 
 ---
 
-# Plotting with `ggplot2`: Slide 1
+# Plotting with `ggplot2`: `sp` Data
 
 
 ```r
@@ -227,7 +227,7 @@ europe.tidy &lt;- dplyr::left_join(europe.tidy, europe@data, by='id')
 
 ---
 
-# Plotting with `ggplot2`: Plot 1
+# Plotting with `ggplot2`: `sp` Data
 
 - Ready to make a production grade map?
 
@@ -250,15 +250,15 @@ ggplot(europe.tidy, aes(long,lat, group=group,fill=gdp_md_est/1000)) +
 
 ---
 
-# Plotting with `ggplot2`: Plot 1
+# Plotting with `ggplot2`: `sp` Data
 
 &lt;img src="06-Static_Maps_files/figure-html/06-10-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
-# Plotting with `ggplot2`: Plot 2
+# Plotting with `ggplot2`: `sf` Data
 
-- Now let's do the last plot with `sf`.
+- Similar to last plot, but with `sf`.
 
 --
 
@@ -273,8 +273,7 @@ europe &lt;- dplyr::filter(world, region_un=="Europe" &amp; name!='Russia')
 europe.bbox &lt;- st_polygon(list(
   matrix(c(-25,29,45,29,45,75,-25,75,-25,29),byrow = T,ncol = 2)))
 
-europe.clipped &lt;- europe %&gt;% 
-  dplyr::filter(as.logical(st_contains(europe.bbox, europe, sparse = F)))
+europe.clipped &lt;- st_intersection(europe, st_sfc(europe.bbox, crs=st_crs(europe)))
 
 ggplot(europe.clipped, aes(fill=gdp_md_est/1000)) +
   geom_sf(alpha=0.8,col='white') +
@@ -288,13 +287,13 @@ ggplot(europe.clipped, aes(fill=gdp_md_est/1000)) +
 
 ---
 
-# Plotting with `ggplot2`: Plot 2
+# Plotting with `ggplot2`: `sf` Data
 
 &lt;img src="06-Static_Maps_files/figure-html/06-12-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
-# Plotting with `ggplot2`: Raster Data
+# Plotting with `ggplot2`:`raster` Data
 
 
 ```r
@@ -311,23 +310,101 @@ r &lt;- raster(system.file("external/test.grd", package="raster"))
 
 ---
 
-# Plotting with Ease-of-Use Pkgs: ggmap
+# Plotting with `ggplot2`: Notes
+
+- `ggplot2` is huge! `geoms`/`scales`/`legends`/`themes`/`facets`...
+
+- There are several ggplot2 [extension](https://www.ggplot2-exts.org) packages.
+
+- Prefer `geom_polygon` over `geom_map`.
+
+- Be careful when tidying and subsequently joining `sp` data.
+
+- Add the main dataset to `ggplot2()`, and others to respective `geom`'s `data` argument. You may need `inherit.aes=F` in `geom`s with their own data.
+
+- Some good map themes `ggthemes::theme_map`, `hrbrthemes::theme_ipsum`, `ggplot2::theme_bw`.
+
+- For `sp` objects prefer `ggalt::coord_proj` over `ggplot2::coord_map`, as the former supports proj4 strings.
+
+- `sf` support is not on CRAN and evolving, expect bugs/issues.
 
 ---
 
-# Plotting with Ease-of-Use Pkgs: ggmap
+# Plotting with tmap
+
+- `plot` mode for static maps and `view` mode for interactive maps.
+
+- `qtm()` Quick plotting. Otherwise `tm_shape()` + `tm_&lt;feature&gt;`.
+
+- Syntax similar to `ggplot2`, but returned object is not a `ggplot2` plot.
+
+- Unlike `ggplot2` you need one `tm_shape` + one `tm_&lt;feature&gt;` per layer.
+
+- Supports many different map styles and aesthetic elements like compass, legend, scale etc.
+
+--
+
+
+```r
+usa_pop_history &lt;- readr::read_tsv('usa_pop_history.tsv')
+usa &lt;- dplyr::left_join(albersusa::usa_sf(), usa_pop_history, by=c('name'='State'))
+usa &lt;- st_transform(usa, crs=albersusa::us_laea_proj)
+
+years &lt;-  c(1900,1950,1990,2000,2010,2015)
+
+tmap::qtm(usa, fill=paste0("p.",years), title=years, 
+          layout.title.color='red', layout.title.position=c('center','top'),
+          layout.main.title = 'U.S.A. Population by State',
+          style = 'col_blind', facets.nrow=2)
+```
 
 ---
 
+# Plotting with `tmap`
 
-# Plotting with Ease-of-Use Pkgs: tmap
-
----
-
-# Plotting with Ease-of-Use Pkgs: tmap
+&lt;img src="06-Static_Maps_files/figure-html/06-15-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
+# Plotting with `ggmap`
+
+--
+
+- Primarily used to add base maps from Google Maps, OSM, Stamen etc. to `ggplot2` maps.
+
+--
+
+- The returned object is a `ggplot2` object which can be further worked upon.
+
+--
+
+
+```r
+library(ggplot2)
+library(ggmap)
+
+paste0("2016-0",1:7) %&gt;%
+  purrr::map(function(month) {
+    suppressMessages(readr::read_csv(
+      system.file(
+        sprintf("examples/data/London-Crimes/%s/%s-city-of-london-street.csv.zip",
+                month,month), package='leaflet.extras')
+    ))
+  }) %&gt;%
+  dplyr::bind_rows() -&gt; crimes
+
+qmplot(Longitude, Latitude, data=crimes, geom="blank", zoom=15,
+       maptype = "toner-lite", facets = ~Month) +
+  stat_density_2d(aes(fill = ..level..), geom = "polygon", alpha = .3) +
+  scale_fill_gradient2("Crime Heatmap", low = "white", mid = "yellow", high = "red") + theme(legend.position = 'hide')
+```
+
+---
+
+# Plotting with `ggmap`
+
+&lt;img src="06-Static_Maps_files/figure-html/06-17-1.svg" style="display: block; margin: auto;" /&gt;
+---
 
 # Plotting with Ease-of-Use Pkgs: cartography
 
@@ -350,7 +427,7 @@ class: inverse middle
 
 # Part 5: The End!
 
-Continue to [Part 6: Dynamic Maps](05-Dynamic Maps.html)
+Continue to [Part 7: Dynamic Maps](07-Dynamic Maps.html)
 
 .footnote[Restart [Part 6: Static Maps](05-Static Maps.html)]
     </textarea>
