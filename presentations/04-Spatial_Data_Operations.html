@@ -44,13 +44,18 @@ colnames(meuse@data)
 ```
 
 ```r
-meuse[9:10, c('lead','zinc')]
+print(meuse[9:10, c('lead','zinc')])
 ```
 
 ```
-##         coordinates lead zinc
-## 9  (181060, 333231)  133  347
-## 10 (181232, 333168)   80  183
+## class       : SpatialPointsDataFrame 
+## features    : 2 
+## extent      : 181060, 181232, 333168, 333231  (xmin, xmax, ymin, ymax)
+## coord. ref. : +init=epsg:28992 +proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.4171,50.3319,465.5524,-0.398957388243134,0.343987817378283,-1.87740163998045,4.0725 +units=m +no_defs 
+## variables   : 2
+## names       : lead, zinc 
+## min values  :   80,  183 
+## max values  :  133,  347
 ```
 
 ```r
@@ -100,10 +105,10 @@ nrow(meuse[meuse$lead&gt;quantile(meuse$lead,.75),])
 ```r
 par(mar=c(0,0,0,0))
 plot(scot_BNG, col='#aaaaaa', border=0)
-* plot(rgeos::gCentroid(scot_BNG, byid=TRUE), add=TRUE, pch=20) 
+*plot(rgeos::gCentroid(scot_BNG, byid=TRUE), add=TRUE, pch=20) 
 ```
 
-&lt;img src="04-Spatial_Data_Operations_files/figure-html/04-03-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-Spatial_Data_Operations_files/figure-html/04-03-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -116,7 +121,7 @@ plot(scot_BNG, col='#aaaaaa', border=0)
 
 ```r
 suppressPackageStartupMessages(library(sf))
-* meuse_sf &lt;- st_as_sf(meuse) 
+*meuse_sf &lt;- st_as_sf(meuse) 
 as.data.frame(meuse_sf[1:2,c('lead', 'zinc', 'geometry')])
 ```
 
@@ -128,7 +133,7 @@ as.data.frame(meuse_sf[1:2,c('lead', 'zinc', 'geometry')])
 
 --
 
--- `st_coordinates(sf)`: Extract the X/Y coordinates.
+- `st_coordinates(sf)`: Extract the X/Y coordinates.
 
 --
 
@@ -154,15 +159,15 @@ as.data.frame(meuse_sf[1:2,c('lead', 'zinc', 'geometry')])
 
 
 ```r
-* usa_sfg &lt;- st_transform(st_geometry(albersusa::usa_sf()),                      albersusa::us_aeqd_proj) 
-* usa_c &lt;- st_centroid(usa_sfg) 
-* usa_50 &lt;- (usa_sfg - usa_c) * .50 + usa_c 
+*usa_sfg &lt;- st_transform(st_geometry(albersusa::usa_sf()), albersusa::us_aeqd_proj) 
+*usa_c &lt;- st_centroid(usa_sfg) 
+*usa_50 &lt;- (usa_sfg - usa_c) * .50 + usa_c 
 par(mar=c(0,0,0,0));plot(usa_sfg)
 plot(usa_50, add=TRUE, col='#FFA50077', border=0)
 plot(usa_c, add=TRUE, pch=20)
 ```
 
-&lt;img src="04-Spatial_Data_Operations_files/figure-html/04-05-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-Spatial_Data_Operations_files/figure-html/04-05-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -216,7 +221,7 @@ par(mar=c(5,5,5,5), mfrow=c(1,2))
 hist(r); hist(r_log)
 ```
 
-&lt;img src="04-Spatial_Data_Operations_files/figure-html/04-07-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-Spatial_Data_Operations_files/figure-html/04-07-1.svg" style="display: block; margin: auto;" /&gt;
 
 
 ---

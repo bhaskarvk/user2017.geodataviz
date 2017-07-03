@@ -298,7 +298,7 @@ ggplot(europe.clipped, aes(fill=gdp_md_est/1000)) +
 
 ```r
 suppressPackageStartupMessages(library(raster))
-#suppressPackageStartupMessages(library(rasterVis))
+
 r &lt;- raster(system.file("external/test.grd", package="raster"))
 
 *rasterVis::gplot(r) + geom_tile(aes(fill = value))  +
@@ -326,7 +326,7 @@ r &lt;- raster(system.file("external/test.grd", package="raster"))
 
 - For `sp` objects prefer `ggalt::coord_proj` over `ggplot2::coord_map`, as the former supports proj4 strings.
 
-- `sf` support is not on CRAN and evolving, expect bugs/issues.
+- `geom_sf` support is brand new so expect a few bugs.
 
 ---
 
@@ -346,7 +346,8 @@ r &lt;- raster(system.file("external/test.grd", package="raster"))
 
 
 ```r
-usa_pop_history &lt;- readr::read_tsv('usa_pop_history.tsv')
+usa_pop_history &lt;- readr::read_tsv(system.file(
+  'extdata','usa_pop_history.tsv', package='user2017.geodataviz'))
 usa &lt;- dplyr::left_join(albersusa::usa_sf(), usa_pop_history, by=c('name'='State'))
 usa &lt;- st_transform(usa, crs=albersusa::us_laea_proj)
 
@@ -396,7 +397,8 @@ paste0("2016-0",1:7) %&gt;%
 qmplot(Longitude, Latitude, data=crimes, geom="blank", zoom=15,
        maptype = "toner-lite", facets = ~Month) +
   stat_density_2d(aes(fill = ..level..), geom = "polygon", alpha = .3) +
-  scale_fill_gradient2("Crime Heatmap", low = "white", mid = "yellow", high = "red") + theme(legend.position = 'hide')
+  scale_fill_gradient2("Crime Heatmap", low = "white", mid = "yellow", high = "red") +
+  theme(legend.position = 'hide')
 ```
 
 ---
@@ -404,32 +406,63 @@ qmplot(Longitude, Latitude, data=crimes, geom="blank", zoom=15,
 # Plotting with `ggmap`
 
 &lt;img src="06-Static_Maps_files/figure-html/06-17-1.svg" style="display: block; margin: auto;" /&gt;
----
-
-# Plotting with Ease-of-Use Pkgs: cartography
 
 ---
 
-# Plotting with Ease-of-Use Pkgs: cartography
+# Other Options for Plotting
+
+- `cartography` package eases base R plotting quite a bit.&lt;br/&gt; Example code of generating a choropleth map of Internet usage by population for African countries.
+
+
+```r
+library(cartography)
+
+world &lt;- sf::st_as_sf(rnaturalearth::countries110)
+internet_usage &lt;- suppressMessages(readr::read_csv(
+  'inst/extdata/africa-internet_usage-2015.csv'))
+
+africa &lt;- dplyr::filter(world, region_un=='Africa') %&gt;%
+  dplyr::left_join(internet_usage %&gt;% dplyr::select(
+    `Country Code`, `2015 [YR2015]`
+  ) %&gt;% dplyr::rename(iso_a3=`Country Code`, internet.usage.2015=`2015 [YR2015]`),
+  by = 'iso_a3') %&gt;%
+  st_transform(crs="+proj=laea +lon_0=18.984375")
+
+par(mar = c(0.5, 0.5, 0.5, 0.5))
+plot(st_geometry(africa), border=grey(0.2), col=grey(0.9))
+plot(st_centroid(africa), add=TRUE, col='black', pch=20)
+*propSymbolsLayer(x=africa, var='internet.usage.2015', inches = 0.3, col = '#FF5A0088')
+```
 
 ---
 
+# Words of Wisedom
 
-# Plotting with Ease-of-Use Pkgs: choroplethr
+- Base R Graphics ...
+  - Powerful but unintuitive.
+  - `cartography` package eases certain parts.
+
+- `tmap`
+  - Extremely easy to get started and very flexible.
+  - Not `ggplot2` compatible, and has its own syntax.
+  - Has a `view` mode for interactive maps.
+
+- `ggplot2`
+  - Structured API and very flexible.
+  - `ggmap` &amp; `choroplethr` serve as addons providing specialized plotting functions.
+  - [extensions](https://www.ggplot2-exts.org/) galore.
+  - Can be made interactive using `plotly` package.
 
 ---
 
-# Plotting with Ease-of-Use Pkgs: chorophethr
-
----
 
 class: inverse middle
 
 # Part 5: The End!
 
-Continue to [Part 7: Dynamic Maps](07-Dynamic Maps.html)
+Continue to [Part 7: Interactive Maps](07-Interactive Maps.html)
 
-.footnote[Restart [Part 6: Static Maps](05-Static Maps.html)]
+.footnote[Restart [Part 6: Static Maps](06-Static Maps.html)]
     </textarea>
 <script src="libs/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
