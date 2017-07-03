@@ -376,7 +376,7 @@ ggplot(europe.clipped, aes(fill=gdp_md_est/1000)) +
 
 ```{r 06-13, fig.width=6, fig.height=4, fig.align='center'}
 suppressPackageStartupMessages(library(raster))
-#suppressPackageStartupMessages(library(rasterVis))
+
 r <- raster(system.file("external/test.grd", package="raster"))
 
 {{rasterVis::gplot(r) + geom_tile(aes(fill = value)) }} +
@@ -402,7 +402,7 @@ r <- raster(system.file("external/test.grd", package="raster"))
 
 - For `sp` objects prefer `ggalt::coord_proj` over `ggplot2::coord_map`, as the former supports proj4 strings.
 
-- `sf` support is not on CRAN and evolving, expect bugs/issues.
+- `geom_sf` support is brand new so expect a few bugs.
 
 ---
 
@@ -552,11 +552,13 @@ plot(st_centroid(africa), add=TRUE, col='black', pch=20)
 - `tmap`
   - Extremely easy to get started and very flexible.
   - Not `ggplot2` compatible, and has its own syntax.
+  - Has a `view` mode for interactive maps.
 
 - `ggplot2`
   - Structured API and very flexible.
   - `ggmap` & `choroplethr` serve as addons providing specialized plotting functions.
-  - [extensions](https://www.ggplot2-exts.org/) galore. 
+  - [extensions](https://www.ggplot2-exts.org/) galore.
+  - Can be made interactive using `plotly` package.
 
 ---
 
@@ -565,6 +567,6 @@ class: inverse middle
 
 # Part 5: The End!
 
-Continue to [Part 7: Dynamic Maps](07-Dynamic Maps.html)
+Continue to [Part 7: Interactive Maps](07-Interactive Maps.html)
 
 .footnote[Restart [Part 6: Static Maps](06-Static Maps.html)]

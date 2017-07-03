@@ -173,6 +173,10 @@ knitr::opts_chunk$set(cache = TRUE)
 
 --
 
+- [gganimate](https://github.com/dgrtwo/gganimate) / [animation](https://cran.r-project.org/package=animation): Stitch a bunch of static plots for animation. Useful for spatio-tempral data
+
+--
+
 .footnote[1 - See [Data Visualization with R](http://www.datavisualisation-r.com/), a new book that deals extensively with base plotting.]
 
 ---
@@ -181,7 +185,7 @@ knitr::opts_chunk$set(cache = TRUE)
 
 --
 
-- [ggiraph](https://cran.r-project.org/package=ggiraph) / [gganimate](https://github.com/dgrtwo/gganimate) / [animation](https://cran.r-project.org/package=animation): Convert ggplot2 charts to interactive charts.
+- [ggiraph](https://cran.r-project.org/package=ggiraph)  : Convert ggplot2 charts to interactive charts.
 
 --
 

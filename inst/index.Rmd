@@ -89,7 +89,7 @@ Maps that are put in documents, and web pages. Maps than can be printed out. We 
 ##### Part 7: Interactive Maps
 
 
-**[Slides](presentations/01-Interactive_Maps.html)**
+**[Slides](presentations/07-Interactive_Maps.html)**
 
 _from_ **12:10 - 12:50**
 

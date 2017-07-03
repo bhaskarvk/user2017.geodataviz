@@ -24,11 +24,11 @@ Read the `meuse` data.frame and convert it into a spatial object. Explore the re
 ```{r sp-01}
 library(sp)
 data(meuse)
-class(meuse)
-colnames(meuse)
+print(class(meuse))
+print(colnames(meuse))
 {{ coordinates(meuse) <- ~x+y }}
 {{ proj4string(meuse) <- CRS("+init=epsg:28992") }}
-class(meuse)
+print(class(meuse))
 summary(meuse)
 ```
 
@@ -37,7 +37,7 @@ summary(meuse)
 Load all 'meuse' datasets
 
 ```{r sp-02}
-demo(meuse, ask=FALSE)
+demo("meuse", ask=FALSE)
 ```
 
 ## Read `sp` objects from files
@@ -48,11 +48,11 @@ dsn <- system.file("vectors", package = "rgdal")[1]
 
 ogrInfo(dsn=dsn, layer="scot_BNG")
 
-OGRSpatialRef(dsn=dsn, layer="scot_BNG")
+print(OGRSpatialRef(dsn=dsn, layer="scot_BNG"))
 
 scot_BNG <- readOGR(dsn=dsn, layer="scot_BNG")
 
-class(scot_BNG)
+print(class(scot_BNG))
 
 summary(scot_BNG)
 ```
@@ -72,9 +72,9 @@ range(meuse[['zinc']])
 ## Projection Transformation
 
 ```{r sp-05}
-proj4string(meuse)
+print(proj4string(meuse))
 meuse.latlon <- spTransform(meuse, CRS("+init=epsg:4326")) # What's '+init=epsg:4326' ?
-proj4string(meuse)
+print(proj4string(meuse))
 ```
 
 ## Other Operations
@@ -91,7 +91,7 @@ proj4string(meuse)
 ```{r sf-01}
 library(sf)
 scot_BNG <- sf::st_read(system.file("vectors", package = "rgdal")[1], 'scot_BNG')
-class(scot_BNG)
+print(class(scot_BNG))
 summary(scot_BNG)
 ```
 
@@ -100,7 +100,7 @@ summary(scot_BNG)
 ```{r sf-02}
 # Just the geometry
 scot_BNG.geom <- st_geometry(scot_BNG)
-class(scot_BNG.geom)
+print(class(scot_BNG.geom))
 
 # Reprojection
 st_crs(scot_BNG)
@@ -126,13 +126,13 @@ methods(class='sf')
 ```{r raster-01}
 library(raster)
 r <- raster(system.file("external/test.grd", package="raster"))
-class(r)
+print(class(r))
 summary(r)
 ```
 
 ## `vector` Operations
 
-```{r 04-07, fig.align='center', fig.width=12,fig.height=6}
+```{r raster-02, fig.align='center', fig.width=12,fig.height=6}
 r_log <- calc(r, log)
 par(mar=c(5,5,5,5), mfrow=c(1,2))
 hist(r); hist(r_log)

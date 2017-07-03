@@ -131,6 +131,7 @@ We also need development versions of certain packages, which can be installed fr
   - hrbrmstr/albersusa
   - hrbrmstr/hrbrthemes
   - rstudio/leaflet
+  - rstudio/DT
   - rstudio/rmarkdown
   - rstudio/crosstalk
   - mtennekes/tmap

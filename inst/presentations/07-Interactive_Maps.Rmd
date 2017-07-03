@@ -1,0 +1,845 @@
+---
+title: "Geospatial Visualization using R"
+subtitle: "Part 7: Interactive Maps"
+author: "Bhaskar V. Karambelkar"
+date: "2017/07/04"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    chakra: libs/remark-latest.min.js
+    css: ["default", "xaringan-style.css"]
+    nature:
+      highlightStyle: zenburn
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      navigation:
+        scroll: false
+        click: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(dev = 'svg')
+options(htmltools.dir.version = FALSE)
+options(device = function(file, width, height) {
+  svg(tempfile(), width = width, height = height)
+})
+knitr::opts_chunk$set(cache = TRUE)
+library(magrittr)
+
+```
+
+# `ggiraph` for simple effects
+
+- Use `geom_*_interactive` with hover, tooltip, onClick aesthetics, plot with `ggiraph`.
+
+```{r 07-01, eval=FALSE}
+library(ggplot2); suppressPackageStartupMessages(library(ggiraph))
+
+africa.spdf <- methods::as(africa, 'Spatial')
+africa.spdf@data$id <- row.names(africa.spdf@data)
+
+africa.tidy <- broom::tidy(africa.spdf)
+africa.tidy <- dplyr::left_join(africa.tidy, africa.spdf@data, by='id')
+
+g <- ggplot(africa.tidy) +
+  geom_polygon_interactive(
+    color='black',
+    aes(long, lat, group=group, fill=internet.usage.2015,
+        tooltip=sprintf("%s<br/>%s",iso_a3,internet.usage.2015))) +
+ ggthemes::theme_map() +
+  colormap::scale_fill_colormap(
+    colormap=colormap::colormaps$copper, reverse = T) +
+  labs(title='Internet Usage in Africa in 2015', subtitle='As Percent of Population',
+       caption='Source: World Bank Open Data.')
+
+ggiraph(code=print(g))
+```
+
+---
+
+# `ggiraph` plot
+
+```{r 07-02, include=FALSE}
+library(sp)
+library(sf)
+library(ggplot2)
+library(ggiraph)
+```
+
+```{r 07-03, echo=FALSE, fig.width=10, fig.height=8, fig.align='center'}
+world <- sf::st_as_sf(rnaturalearth::countries110)
+internet_usage <- suppressMessages(readr::read_csv(system.file(
+  'extdata','africa-internet_usage-2015.csv', package='user2017.geodataviz')))
+
+africa <- dplyr::filter(world, region_un=='Africa') %>%
+  dplyr::left_join(internet_usage %>% dplyr::select(
+    `Country Code`, `2015 [YR2015]`
+  ) %>% dplyr::rename(iso_a3=`Country Code`, internet.usage.2015=`2015 [YR2015]`),
+  by = 'iso_a3') %>%
+  st_transform(crs="+proj=laea +lon_0=18.984375")
+
+africa.spdf <- methods::as(africa, 'Spatial')
+africa.spdf@data$id <- row.names(africa.spdf@data)
+
+africa.tidy <- suppressMessages(broom::tidy(africa.spdf))
+africa.tidy <- dplyr::left_join(africa.tidy, africa.spdf@data, by='id')
+
+g <- ggplot(africa.tidy) +
+  geom_polygon_interactive(
+    color='black',
+    aes(long, lat, group=group, fill=internet.usage.2015,
+        tooltip=sprintf("%s<br/>%s",iso_a3,internet.usage.2015))) +
+ ggthemes::theme_map() +
+  colormap::scale_fill_colormap(
+    colormap=colormap::colormaps$copper, reverse = T) +
+  labs(title='Internet Usage in Africa in 2015', subtitle='As Percent of Population',
+       caption='Source: World Bank Open Data.')
+
+widgetframe::frameWidget(ggiraph(code=print(g)))
+```
+
+---
+
+# `plotly`  
+
+- `htmlwidgets` based wrapper for [plot.ly](https://plot.ly/) JavaScript library.
+
+- Extremely easy and yet powerful. Commercial use requires a paid version.
+
+- Plays nicely with `ggplot2`
+
+```{r 07-04, eval=FALSE}
+library(plotly)
+usa <- albersusa::usa_sf("laea")
+usd <- crosstalk::SharedData$new(usa)
+p <- ggplot(usd) + geom_sf(aes(fill = pop_2010))
+
+ggplotly(p) %>%
+  highlight(
+    "plotly_hover",
+    selected = attrs_selected(line = list(color = "black"))
+)
+
+```
+
+--
+
+- For some reason not working for me right now. So no output, Sorry! But feel free to try yourself.
+
+---
+
+# `rBokeh`
+
+- Port of Python's [bokeh](http://bokeh.pydata.org/en/latest/) library.
+
+- Has its own syntax.
+
+```{r 07-05, eval=FALSE}
+library(maps)
+data(world.cities)
+library(rbokeh)
+caps <- dplyr::filter(world.cities, capital == 1)
+caps$population <- prettyNum(caps$pop, big.mark = ",")
+suppressWarnings(figure(width = 800, height = 450, padding_factor = 0) %>%
+  ly_map("world", col = "gray") %>%
+  ly_points(long, lat, data = caps, size = 5,
+            hover = c(name, country.etc, population)))
+
+```
+
+---
+
+# `rBokeh` plot
+
+```{r 07-06, echo=FALSE, fig.width=10, fig.height=8, fig.align='center'}
+library(maps)
+data(world.cities)
+library(rbokeh)
+caps <- dplyr::filter(world.cities, capital == 1)
+caps$population <- prettyNum(caps$pop, big.mark = ",")
+plot <- suppressWarnings(figure(width = 800, height = 450, padding_factor = 0) %>%
+  ly_map("world", col = "gray") %>%
+  ly_points(long, lat, data = caps, size = 5,
+            hover = c(name, country.etc, population)))
+
+widgetframe::frameWidget(plot, width=1024, height=576)
+```
+
+---
+
+# `highcharter`
+
+- Wraps [highcharts](https://www.highcharts.com/), a very popular JavaScript library.
+
+```{r 07-07, eval=FALSE}
+
+download_map_data <- memoise::memoise(highcharter::download_map_data)
+get_data_from_map <- memoise::memoise(highcharter::get_data_from_map)
+hcmap <- memoise::memoise(highcharter::hcmap)
+
+mapdata <- get_data_from_map(download_map_data("countries/au/au-all"))
+
+data_fake <- mapdata %>%
+  dplyr::select(code = `hc-a2`) %>%
+  dplyr::mutate(value = 1e5 * abs(rt(nrow(.), df = 10)))
+
+hcmap("countries/au/au-all", data = data_fake, value = "value",
+        joinBy = c("hc-a2", "code"), name = "Fake data",
+        dataLabels = list(enabled = TRUE, format = '{point.name}'),
+        borderColor = "#FAFAFA", borderWidth = 0.1,
+        tooltip = list(valueDecimals = 2, valuePrefix = "$", valueSuffix = " AUD")) %>%
+  highcharter::hc_title(text="Economy Down Under")
+
+```
+
+---
+
+`highcharter` plot
+
+```{r 07-08, echo=FALSE, fig.width=10, fig.height=8, fig.align='center'}
+library(magrittr)
+
+download_map_data <- memoise::memoise(highcharter::download_map_data)
+get_data_from_map <- memoise::memoise(highcharter::get_data_from_map)
+hcmap <- memoise::memoise(highcharter::hcmap)
+
+mapdata <- get_data_from_map(download_map_data("countries/au/au-all"))
+
+data_fake <- mapdata %>%
+  dplyr::select(code = `hc-a2`) %>%
+  dplyr::mutate(value = 1e5 * abs(rt(nrow(.), df = 10)))
+
+hcmap("countries/au/au-all", data = data_fake, value = "value",
+        joinBy = c("hc-a2", "code"), name = "Fake data",
+        dataLabels = list(enabled = TRUE, format = '{point.name}'),
+        borderColor = "#FAFAFA", borderWidth = 0.1,
+        tooltip = list(valueDecimals = 2, valuePrefix = "$", valueSuffix = " AUD")) %>%
+  highcharter::hc_title(text="Economy Down Under") %>%
+  widgetframe::frameWidget()
+
+```
+
+---
+
+# `leaflet`
+
+```{r libs, echo=FALSE, message=FALSE, warning=FALSE}
+suppressPackageStartupMessages(library(widgetframe))
+suppressPackageStartupMessages(library(leaflet))
+suppressPackageStartupMessages(library(leaflet.extras))
+```
+
+- Mother of all interactive mappings!
+
+- Extremely powerful and Extremely flexible.
+
+--
+
+- Current State
+
+  - `leaflet`: Developed and actively maintained by RStudio.
+  
+  - `leaflet.extras`, `leaflet.esri`: Developed and maintained by yours truly. Provides additional plotting options using leaflet plugins.
+  
+  - `mapview`, `mapedit`: Developed and maintained by the good guys at [r-spatial](http://r-spatial.org/projects/). Allow interactive exploratory spatial analysis.
+
+--
+
+- There is another unrelated project `leafletR` [CRAN Page](https://github.com/chgrl/leafletR), but really don't know much about it.
+
+---
+
+# `leaflet` One Page Summary
+
+```{r 07-leaflet-00, eval=FALSE}
+leaflet(data) | leafletProxy() %>% 
+  
+  
+  setView(lat, lon, zoom) # Initial View OR
+  fitBounds(lat_se, lon_se, latnw, lon_nw) # Initial Bounds
+  setMaxBounds(lat_se, lon_se, latnw, lon_nw) # Max Bounds
+  
+  addTiles() | addProviderTiles() | addWMSTiles() #Tiles
+  
+  addMarkers() | addCircleMarkers() |
+    addAwesomeMarkers() | addLabelOnlyMarkers() # Markers
+  
+  addPolylines() | addCircles() |
+  addRectangles() | addPolygons() # Shapes
+  
+  addRasterImage(image) # Raster Data
+  
+  addLegend() | addLayersControl() | addControl() # Controls
+  
+```
+
+.footnote[
+- A Map is built by piping (`%>%`) several add* methods.
+
+- `leaflet()`/`addXXX()` methods take an optional `options` argument for customization.
+]
+
+
+---
+
+# `leaflet` Base Maps
+
+```{r 07-leaflet-01, eval=FALSE}
+leaflet() %>%
+  setView(lat = 50.85045, lng = 4.34878, zoom=13) %>%
+  addTiles(group="OSM") %>%
+  addProviderTiles(providers$CartoDB.DarkMatter, group="Dark") %>%
+  addProviderTiles(providers$CartoDB.Positron, group="Light") %>%
+  addLayersControl(baseGroups=c('OSM', 'Dark','Light'))
+```
+
+---
+
+# `leaflet` Base Maps
+
+```{r 07-leaflet-02, echo=FALSE, fig.width=8, fig.height=6, fig.align='center'}
+l <- leaflet() %>%
+  setView(lat = 50.85045, lng = 4.34878, zoom=13) %>%
+  addTiles(group="OSM") %>%
+  addProviderTiles(providers$CartoDB.DarkMatter, group="Dark") %>%
+  addProviderTiles(providers$CartoDB.Positron, group="Light") %>%
+  addLayersControl(baseGroups=c('OSM','Dark','Light'))
+  
+frameWidget(l)
+```
+
+---
+
+# `leaflet` Markers
+
+- At a glance
+
+```{r 07-leaflet-03, eval=FALSE}
+
+leaflet(data) %>%
+  
+  addMarkers(
+    lat = ~latitude, lon = ~longitude,
+    
+    options = markerOptions(),
+  
+    label=~label, labelOptions = labelOptions(),
+    popup=~popup, popupOptions = popupOptions(),
+    
+    clusterOptions = clusterOptions(),
+    
+    group = 'Group-A')
+
+  # Similarly 
+  addCircleMarkers()  # Fixed scale Circles
+  addAwesomeMarkers() # More choices for icons
+  addLabelOnlyMarkers() # No icon
+```
+
+---
+
+# `leaflet` Markers
+
+```{r 07-leaflet-04, warning=FALSE}
+quakes.df <- quakes %>% dplyr::mutate(
+    mag.level = cut(mag,c(3.5,4.5,5.5,6.5),
+    labels = c('> 3.5 & <=4.5', '>4.5 & <=5.5', '>5.5 & <=6.5'))) %>%
+  split(.$mag.level)
+
+l <- leaflet() %>%
+  addProviderTiles(providers$Esri.OceanBasemap)
+
+names(quakes.df) %>%
+  purrr::walk( function(df) {
+    l <<- l %>%
+      addMarkers(data=quakes.df[[df]], lng=~long, lat=~lat,
+                 label=~as.character(mag), popup=~as.character(mag),
+                 group = df,
+                 clusterOptions = markerClusterOptions())
+  })
+
+l <- l %>%
+  addLayersControl(
+    overlayGroups = names(quakes.df),
+    options = layersControlOptions(collapsed = FALSE)) %>%
+  addMiniMap(tiles = providers$Esri.OceanBasemap, width = 120, height=80)
+```
+
+---
+
+# `leaflet` Markers
+
+```{r 07-leaflet-05, echo=FALSE, fig.width=8, fig.height=6, fig.align='center'}
+l %>%
+frameWidget()
+```
+
+---
+# `leaflet` Shapes
+
+- At a Glance
+
+```{r 07-leaflet-06, eval=FALSE}
+
+leaflet(data) %>%
+  addPolygons(
+    label=~label, labelOptions = labelOptions(),
+    popup=~popup, popupOptions = popupOptions(),
+             
+    # Shape Options
+    options = pathOptions(),
+    weight = 1, opacity=0.8, color = "#000000",
+    fillColor="#ff0000", fillOpacity=0.7,
+             
+    # Highlighting on mouse-over
+    highlightOptions = highlightOptions(
+      color='#00ff00', weight = 2,
+      opacity = 1, fillOpacity = 1,
+      bringToFront = TRUE, sendToBack = TRUE),
+             
+    group = 'Group-A')
+
+  #Similarly
+  addCircles()
+  addPolylines()
+  addRectangles()
+```
+
+---
+
+# Shapes Example
+
+```{r eg leaflet-07, echo=FALSE, warning=FALSE}
+library(magrittr)
+fName <- system.file('extdata','world-population.geo.json',package = 'user2017.geodataviz')
+spdf <- geojsonio::geojson_sp(rmapshaper::ms_simplify(readr::read_file(fName)))
+spdf@data %<>% dplyr::mutate(
+  AREA = as.numeric(as.character(AREA)),
+  POP2005 = as.numeric(as.character(POP2005))
+)
+
+spdf <- subset(
+  spdf,
+  !(is.na(AREA) | AREA <1 | is.na(POP2005) | POP2005<1)
+)
+
+spdf@data %<>%
+  dplyr::mutate(
+  POPDENSITY = POP2005/AREA
+)
+
+spdf.world <- spdf
+```
+
+```{r 07-leaflet-08}
+# spdf is a sp::SpatialPolygonsDataFrame
+qpal <- colorQuantile(rev(viridis::viridis(5)),
+                      spdf$POPDENSITY, n=5)
+
+l <- leaflet(spdf, options =
+               leafletOptions(attributionControl = FALSE, minzoom=1.5)) %>%
+  addPolygons(
+    label=~stringr::str_c(
+      NAME, ' ',
+      formatC(POPDENSITY, big.mark = ',', format='d')),
+    labelOptions= labelOptions(direction = 'auto'),
+    weight=1,color='#333333', opacity=1,
+    fillColor = ~qpal(POPDENSITY), fillOpacity = 1,
+    highlightOptions = highlightOptions(
+      color='#000000', weight = 2,
+      bringToFront = TRUE, sendToBack = TRUE)
+    ) %>%
+  addLegend(
+    "topright", pal = qpal, values = ~POPDENSITY,
+    title = htmltools::HTML("Population Density<br/>(2005)"),
+    opacity = 1 )
+
+```
+
+---
+
+# Shapes Example
+
+```{r 07-leaflet-09, echo=FALSE, fig.width=8, fig.height=6, fig.align='center'}
+l %>% setMapWidgetStyle() %>%
+  frameWidget()
+```
+
+- Performance Tip: Use `rmapshaper::ms_simplify` with impunity!
+
+---
+
+# `leaflet` Other Misc. Stuff
+
+- `addRasterImage` for adding raster image data. [Example](https://rstudio.github.io/leaflet/raster.html).
+
+- `addMiniMap` for a small map inside the main map at a zoom offset. [Example](http://rpubs.com/bhaskarvk/leaflet-minimap).
+
+- `addMeasure` to measure distances/area. [Example](http://rpubs.com/bhaskarvk/leaflet-measure).
+
+- `addGraticule` adds a graticule. [Example](http://rpubs.com/bhaskarvk/leaflet-graticule).
+
+- `addEasyButton`/`addEasyButtonBar` for customized buttons [Example](http://rpubs.com/bhaskarvk/easybutton).
+
+- `addControl` for custom Control element.
+
+- `addScaleBar` to display a scale.
+
+---
+# `leaflet` Projections Support
+
+- ALL MAPS OF EARTH ARE WRONG! Obligatory [XKCD](http://xkcd.com/977/) ref.
+
+- By Default leaflet ...
+
+  + uses [EPSG:3857](http://epsg.io/3857) (a.k.a. Spherical Mercator) projection to display data/tiles.
+
+  + expects tiles in EPSG:3857.
+
+  + expects input vector/raster data in lat/lon [EPSG:4326](http://epsg.io/4326) and internally converts them to EPSG:3857 before plotting.
+
+- Which means ...
+
+  + You can't use tile services which provide tiles in non-spherical-Mercator projections.
+
+  + You need to convert any vector/raster data in any non-epsg:4326 to epsg:4326 before adding to the leaflet map.
+
+---
+
+# `leaflet` + Proj4Leaflet
+
+- Enter [Proj4Leaflet](https://github.com/kartena/Proj4Leaflet/) a leaflet plugin allowing use of [proj4js](https://github.com/proj4js/proj4js) to display map in non-spherical-Mercator projection.
+
+- Basic use 
+
+```{r 07-leaflet-10, eval=FALSE}
+leaflet(options = 
+          leafletOptions(crs = leafletCRS()))
+```
+
+- So now you can display data/tiles in a non-spherical-Mercator projection.
+
+- But you still need to specify vector/raster data in EPSG:4326 (lat/lon) which will get internally converted to the custom projection specified.
+
+- Another caveat: You can have only one projection at a time which is set during initialization. To change projection you need to destroy and rebuild the map.
+
+---
+
+# `leaflet` Projections Example 1.
+
+```{r 07-leaflet-11, echo=FALSE}
+spdf <- spdf.world
+```
+
+```{r 07-leaflet-12}
+crs.molvidde <- leafletCRS(
+  crsClass="L.Proj.CRS", code='ESRI:53009',
+  proj4def= '+proj=moll +lon_0=0 +x_0=0 +y_0=0 +a=6371000 +b=6371000 +units=m +no_defs',
+  resolutions = c(65536, 32768, 16384, 8192, 4096, 2048))
+
+l <- leaflet(
+  spdf,
+  options = leafletOptions(
+    maxZoom = 5, crs= crs.molvidde, attributionControl = FALSE)) %>%
+  addGraticule(style= list(color= '#999', weight= 0.5, opacity= 1)) %>%
+  addGraticule(sphere = TRUE,
+               style= list(color= '#777', weight= 1, opacity= 0.25)) %>%
+  addPolygons(
+    label=~stringr::str_c(
+      NAME, ' ', formatC(POPDENSITY, big.mark = ',', format='d')),
+    labelOptions= labelOptions(direction = 'auto'),
+    weight=1,color='#ffffff', opacity=1,
+    fillColor = ~qpal(POPDENSITY), fillOpacity = 1,
+    highlightOptions = highlightOptions(
+      color='#000000', weight = 2,
+      bringToFront = TRUE, sendToBack = TRUE)) 
+```
+
+---
+
+# Projections Example 1.
+
+```{r 07-leaflet-13, echo=FALSE, fig.width=8, fig.height=6, fig.align='center'}
+l %>%
+  setView(10,0,0.5) %>% setMapWidgetStyle() %>%
+  frameWidget()
+```
+
+---
+
+# Projections Example 2.
+
+```{r 07-leaflet-14}
+spdf <- rmapshaper::ms_simplify(albersusa::usa_composite())
+pal <- colorNumeric(palette = "Blues", domain = spdf@data$pop_2014)
+
+crs.laea <- leafletCRS(
+  crsClass="L.Proj.CRS", code='EPSG:2163',
+  proj4def='+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs',
+  resolutions = c(65536, 32768, 16384, 8192, 4096, 2048,1024, 512, 256, 128))
+
+l <- leaflet(
+  options= leafletOptions(
+    worldCopyJump = FALSE, crs=crs.laea, attributionControl = FALSE)) %>%
+  addPolygons(
+    data=spdf, label=~stringr::str_c(
+      name, ' ', formatC(pop_2014, big.mark = ',', format='d')),
+    labelOptions= labelOptions(direction = 'auto'),
+    weight = 1, color = "#000000",
+    fillColor=~pal(pop_2014), fillOpacity=0.7,
+    highlightOptions = highlightOptions(
+      color='#ff0000', opacity = 1, weight = 2, fillOpacity = 1,
+      bringToFront = TRUE, sendToBack = TRUE))
+```
+
+---
+
+# Projections Example 2.
+
+```{r 07-leaflet-15, echo=FALSE, fig.width=8, fig.height=6, fig.align='center'}
+l %>%
+  fitBounds(-125, 24 ,-75, 45) %>%
+  setMaxBounds(-125, 24 ,-75, 45) %>%
+  setMapWidgetStyle() %>% 
+  frameWidget()
+```
+
+---
+
+# `leaflet` + `tilegramsR`
+
+
+```{r 07-leaflet-16, echo=FALSE}
+suppressPackageStartupMessages(library(tilegramsR))
+
+states <- FiveThirtyEightElectoralCollege.states@data$state
+factpal <- colorFactor(
+  colormap::colormap(nshades = length(states), 
+                     colormap = colormap::colormaps$jet ), 
+  states)
+```
+
+```{r 07-leaflet-17}
+l <- leaflet(
+  options=leafletOptions(
+    crs = leafletCRS("L.CRS.Simple"),
+    minZoom = -2, maxZoom = -2,
+    dragging = FALSE, zoomControl = FALSE, attributionControl = FALSE)) %>%
+  addPolygons(
+    data=FiveThirtyEightElectoralCollege,
+    weight=1,color='#000000', fillOpacity = 0.5, opacity=0.2,
+    fillColor= ~factpal(state)) %>%
+  addPolygons(
+    data=FiveThirtyEightElectoralCollege.states, group = 'states',
+    weight=2,color='#000000',
+    fill = T, opacity = 1, fillOpacity = 0,
+    highlightOptions = highlightOptions(weight = 4)) %>%
+  addLabelOnlyMarkers(
+    data=FiveThirtyEightElectoralCollege.centers,
+    label = ~as.character(state),
+    labelOptions = labelOptions(
+      noHide = 'T', textOnly = T,
+      offset=c(-8,-20), textsize = '12px'))
+```
+
+---
+
+# Projections Example 3
+
+```{r 07-leaflet-18, echo=FALSE, fig.width=8, fig.height=7, fig.align='center'}
+l %>%
+  leaflet.extras::setMapWidgetStyle() %>%
+  setMapWidgetStyle() %>% 
+  frameWidget()
+```
+
+---
+
+# leaflet.extras and `leaflet.esri`
+
+- Add-on packages for `leaflet`. Developed by yours truly to integrate the plethora of leaflet plugins available.
+
+-  Published to CRAN just before UserR! 2017.
+
+- Actively being developed and maintained. Contributions welcome.
+
+- `leaflet` package will be stable and `leaflet.extras` will be very dynamic.
+
+---
+
+# leaflet.extras
+
+- Add/Modify/delete/style markers/shapes using [Leaflet.Draw](http://rpubs.com/bhaskarvk/leaflet-draw).
+
+- Add [GeoJSON](http://rpubs.com/bhaskarvk/geojsonv2), [TopoJSON](http://rpubs.com/bhaskarvk/topojsonv2), [KML](http://rpubs.com/bhaskarvk/kml), [GPX](http://rpubs.com/bhaskarvk/gpx), [CSV](http://rpubs.com/bhaskarvk/csv) files directly.
+  + Customizable Markers and Shapes
+  + Choropleths from polygon data w/ auto legends and bi-directional highlighting
+  + Popup showing properties in a tables
+
+- Create [Heatmap](http://rpubs.com/bhaskarvk/leaflet-heatmap) from point data.
+
+- [Search](http://rpubs.com/bhaskarvk/leaflet-search) Markers. Geo-locate using OSM Nominatum API.
+
+- [Pulsating](http://rpubs.com/bhaskarvk/leaflet-pulseIcon) and [Weather](http://rpubs.com/bhaskarvk/leaflet-weather) icons for markers.
+
+- [Tiles Caching](http://rpubs.com/bhaskarvk/TileLayer-Caching), [GPS](https://github.com/stefanocudini/leaflet-gps), and many more!
+
+---
+
+# TopoJSON Example
+
+```{r 07-leaflet-19}
+library(leaflet.extras)
+fName <- system.file('extdata','crimes_by_district.topojson', package='user2017.geodataviz')
+
+l <- leaflet() %>%
+  addBootstrapDependency() %>%
+  setView(-75.14, 40, zoom = 11) %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  addGeoJSONChoropleth(
+    readr::read_file(fName), valueProperty ='incidents',
+    scale = 'OrRd', mode='q', steps = 5, padding = c(0.2,0),
+    popupProperty = propstoHTMLTable(
+      props = c('dist_numc', 'location', 'incidents', '_feature_id_string'),
+      table.attrs = list(class='table table-striped table-bordered'),drop.na = T),
+    labelProperty = JS('function(feature){return "WARD: " + feature.properties.dist_numc;}'),
+    color='#ffffff', weight=1, fillOpacity = 0.7,
+    highlightOptions = highlightOptions(
+      fillOpacity=1, weight=2, opacity=1, color='#000000',
+      bringToFront=TRUE, sendToBack = TRUE),
+    legendOptions = legendOptions(title='Crimes', position='topright'))
+```
+
+---
+
+# TopoJSON Example
+
+```{r 07-leaflet-20, echo=FALSE, fig.width=8, fig.height=7, fig.align='center'}
+l %>%
+  frameWidget()
+```
+
+---
+
+# `crosstalk` Inter-widget communication
+
+- Pure JavaScript solution works anywhere a normal `htmlwidget` will work.<sup>1</sup>
+
+- Works on the concept of shared data between widgets.
+
+
+```{r crosstalk-01,eval=FALSE}
+library(crosstalk)
+library(leaflet)
+library(DT)
+
+# Wrap data frame in SharedData
+sd <- SharedData$new(quakes[sample(nrow(quakes), 100),])
+
+# Create a filter input
+filter_slider("mag", "Magnitude", sd, column=~mag, step=0.1, width=250)
+
+# Use SharedData like a dataframe with Crosstalk-enabled widgets
+bscols(
+  leaflet(sd) %>% addTiles() %>% addMarkers(),
+  datatable(sd, extensions="Scroller", style="bootstrap", class="compact", width="100%",
+    options=list(deferRender=TRUE, scrollY=300, scroller=TRUE))
+)
+```
+
+.footnote[1: Documentation: https://rstudio.github.io/crosstalk/using.html]
+---
+
+# Shiny!
+
+<center>
+![](Moana-Shiny.jpg)
+</center/>
+
+---
+
+# What is Shiny?
+
+- Shiny allows you to build visualizations dynamically, be they static or interactive.
+
+- You need a Shiny server to run Shiny apps. Free/Commercial versions available from RStudio.
+
+- Static visualizations need to destroyed and rebuilt every time the input data for the viz changes.
+
+- Interactive visualizations (i.e. `htmlwidgets`) however can support manipulating existing viz in response to `shiny` events.
+
+- `Plotly`, `leaflet` etc. support changing an existing map.
+
+- `manipulateWidget` package allows building `htmlwidgets` which can respond to input events.
+
+---
+
+# `leaflet` + `shiny`
+
+- Use `leafletProxy()` to update already existing map.
+
+- Use `clear*` methods to remove stuff already on a map.
+
+- leaflet package traps many leaflet [events](http://leafletjs.com/reference.html#map-events) and makes then available as shiny events.
+
+- Use `observeEvent(input$<MAP_ID>_<EVENT_NAME>)` to act on these events.
+
+---
+
+# `leaflet` + `shiny`
+
+```{r 07-leaflet-shiny-01, eval=FALSE}
+library(shiny); library(leaflet)
+
+r_colors <- rgb(t(col2rgb(colors()) / 255))
+names(r_colors) <- colors()
+
+ui <- fluidPage(
+  leafletOutput("mymap"),
+  p(),
+  actionButton("recalc", "New points")
+)
+
+server <- function(input, output, session) {
+  points <- eventReactive(input$recalc, {
+    cbind(rnorm(40) * 2 + 13, rnorm(40) + 48)
+  }, ignoreNULL = FALSE)
+  output$mymap <- renderLeaflet({
+    leaflet() %>%
+      addProviderTiles(providers$Stamen.TonerLite, options = providerTileOptions(noWrap = TRUE)) %>%
+      addMarkers(data = points())
+  })
+}
+
+shinyApp(ui, server)
+```
+
+---
+
+class: inverse middle
+
+# Part 7: The End!
+
+
+Thus marks the end of 'Geospatial visualization in R'  tutorial by Bhaskar V. Karambelkar, the first of his name!
+
+Wait there's [more](#41).
+
+---
+
+# Thanks!
+
+- So many people to thank....
+
+  - [Bob Rudis](https://twitter.com/hrbrmstr): Mentor and teacher.
+  - [Joe Cheng](https://twitter.com/jcheng): RStudio CTO and `leaflet` author.
+  - [Tim Appelhans](https://twitter.com/TimSalabim3): `mapview` author and my virtual GIS guru.
+  - [Kent Russels](https://twitter.com/timelyportfolio): `mapedit` and many more widgets author and collaborator for `leaflet` and `leaflet.extras`
+  - [Michale Sumner](https://twitter.com/mdsumner): Author of many R GIS packages and helped me a lot understanding GIS.
+  - [Kyle Walker](@kyle_e_walker): Author of `tigris`/`tidycensus`, and super helpful guy.
+  - [Edzer Pebesma](https://twitter.com/edzerpebesma): R GIS super guru and author of `sf` and many many R GIS pacakges.
+  - All package owners of the R GIS ecosystem.
+  

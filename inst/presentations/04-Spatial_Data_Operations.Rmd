@@ -21,7 +21,11 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
+knitr::opts_chunk$set(dev = 'svg')
 options(htmltools.dir.version = FALSE)
+options(device = function(file, width, height) {
+  svg(tempfile(), width = width, height = height)
+})
 knitr::opts_chunk$set(cache = TRUE)
 ```
 
@@ -40,7 +44,7 @@ scot_BNG <- rgdal::readOGR(
 ```{r 04-02}
 dim(meuse@data)
 colnames(meuse@data)
-meuse[9:10, c('lead','zinc')]
+print(meuse[9:10, c('lead','zinc')])
 nrow(meuse[meuse$lead>quantile(meuse$lead,.75),])
 ```
 
@@ -82,7 +86,7 @@ nrow(meuse[meuse$lead>quantile(meuse$lead,.75),])
 ```{r 04-03, fig.height=5, fig.align='center'}
 par(mar=c(0,0,0,0))
 plot(scot_BNG, col='#aaaaaa', border=0)
-{{ plot(rgeos::gCentroid(scot_BNG, byid=TRUE), add=TRUE, pch=20) }}
+{{plot(rgeos::gCentroid(scot_BNG, byid=TRUE), add=TRUE, pch=20) }}
 ```
 
 ---
@@ -95,13 +99,13 @@ plot(scot_BNG, col='#aaaaaa', border=0)
 
 ```{r 04-04}
 suppressPackageStartupMessages(library(sf))
-{{ meuse_sf <- st_as_sf(meuse) }}
+{{meuse_sf <- st_as_sf(meuse) }}
 as.data.frame(meuse_sf[1:2,c('lead', 'zinc', 'geometry')])
 ```
 
 --
 
--- `st_coordinates(sf)`: Extract the X/Y coordinates.
+- `st_coordinates(sf)`: Extract the X/Y coordinates.
 
 --
 
@@ -125,10 +129,10 @@ as.data.frame(meuse_sf[1:2,c('lead', 'zinc', 'geometry')])
 
 # Example
 
-```{r 04-05, fig.height=5, fig.align='center'}
-{{ usa_sfg <- st_transform(st_geometry(albersusa::usa_sf()),                      albersusa::us_aeqd_proj) }}
-{{ usa_c <- st_centroid(usa_sfg) }}
-{{ usa_50 <- (usa_sfg - usa_c) * .50 + usa_c }}
+```{r 04-05, fig.height=4, fig.align='center'}
+{{usa_sfg <- st_transform(st_geometry(albersusa::usa_sf()), albersusa::us_aeqd_proj) }}
+{{usa_c <- st_centroid(usa_sfg) }}
+{{usa_50 <- (usa_sfg - usa_c) * .50 + usa_c }}
 par(mar=c(0,0,0,0));plot(usa_sfg)
 plot(usa_50, add=TRUE, col='#FFA50077', border=0)
 plot(usa_c, add=TRUE, pch=20)
@@ -152,7 +156,7 @@ cellStats(r, function(x, ...)
 
 # Operations on `raster` Objects
 
-```{r 04-07, fig.align='center', fig.width=12,fig.height=6}
+```{r 04-07, fig.align='center', fig.width=12,fig.height=4.5}
 {{ r_log <- calc(r, log) }}
 par(mar=c(5,5,5,5), mfrow=c(1,2))
 hist(r); hist(r_log)

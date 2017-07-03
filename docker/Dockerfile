@@ -29,6 +29,7 @@ RUN apt-get update \
   && installGithub.r hrbrmstr/albersusa \
   && installGithub.r hrbrmstr/hrbrthemes \
   && installGithub.r rstudio/leaflet \
+  && installGithub.r rstudio/DT \
   && installGithub.r rstudio/rmarkdown \
   && installGithub.r rstudio/crosstalk \
   && installGithub.r mtennekes/tmap \

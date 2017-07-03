@@ -116,7 +116,7 @@ ggplot() + geom_sf(data=albersusa::usa_sf()) +
 
 ---
 
-# Save Animations
+# Animations
 
 --
 
@@ -214,6 +214,10 @@ knitr::opts_chunk$set(cache = TRUE)
 --
 
 - All the above are instances of `htmlwidgets`. R wrapper packages for JavaScript based visualization APIs. 
+
+--
+
+- `widgetframe` package allows you to wrap a widget in an iframe for better display in HTML outputs.
 
 --
 
