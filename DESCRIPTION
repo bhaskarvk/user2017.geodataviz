@@ -4,18 +4,57 @@ Title: Tutorial on Geo-Spatial Data Visualization Options in R.
 Version: 0.1.0
 Authors@R: person("Bhaskar", "Karambelkar", email = "bhaskarvk@gmail.com",
     role = c("aut", "cre"))
-Description: This is a 'learnr' based tutorial on data visualization options
-    available in R.
+Description: The package contains a set of HTML presentations explaining the options available for visualizing spatial data in R. This tutorial was presented by the author at UserR! 2017.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends:
     R (>= 3.1.0)
-Imports: learnr, shiny
-Suggests: rgdal,
+Imports: xaringan,
+  rmarkdown,
+  knitr
+Suggests: 
+    tidyverse,
+    rgdal,
     rgeos,
     sp,
     sf,
+    raster,
+    rasterVis,
+    ggplot2,
+    broom,
+    ggmap,
+    ggalt,
+    viridis,
+    animation,
+    raster,
+    rasterViz,
+    leaflet,
+    leaflet.extras,
+    leaflet.esri,
+    mapview,
+    mapedit,
+    tmap,
+    rnaturalearth,
+    albersusa,
+    maps,
+    maptools,
+    gdistance,
+    geosphere
+Remotes: tidyverse/ggplot2,
+  - edzer/sfr,
+  - hrbrmstr/ggalt,
+  - hrbrmstr/albersusa,
+  - hrbrmstr/hrbrthemes,
+  - rstudio/leaflet,
+  - rstudio/rmarkdown,
+  - rstudio/crosstalk,
+  - mtennekes/tmap,
+  - bhaskarvk/leaflet.extras,
+  - bhaskarvk/leaflet.esri,
+  - 'r-spatial/mapview@develop',
+  - r-spatial/mapedit,
+  - dkahle/ggmap
 VignetteBuilder: knitr
 URL: https://github.com/bhaskarvk/user2017.geodataviz
 BugReports: https://github.com/bhaskarvk/user2017.geodataviz/issues

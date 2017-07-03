@@ -421,7 +421,7 @@ r <- raster(system.file("external/test.grd", package="raster"))
 --
 
 ```{r 06-14, eval=FALSE}
-usa_pop_history <- readr::read_tsv('usa_pop_history.tsv')
+usa_pop_history <- readr::read_tsv(system.file('extdata','usa_pop_history.tsv', package='user2017.geodataviz'))
 usa <- dplyr::left_join(albersusa::usa_sf(), usa_pop_history, by=c('name'='State'))
 usa <- st_transform(usa, crs=albersusa::us_laea_proj)
 
@@ -438,7 +438,8 @@ tmap::qtm(usa, fill=paste0("p.",years), title=years,
 # Plotting with `tmap`
 
 ```{r 06-15, echo=FALSE, fig.width=12, fig.height=6, fig.align='center'}
-usa_pop_history <- suppressMessages(readr::read_tsv('usa_pop_history.tsv'))
+usa_pop_history <- suppressMessages(
+  readr::read_tsv(system.file('extdata','usa_pop_history.tsv', package='user2017.geodataviz')))
 usa <- suppressWarnings(dplyr::left_join(albersusa::usa_sf(), usa_pop_history, by=c('name'='State')))
 usa <- st_transform(usa, crs=albersusa::us_laea_proj)
 years <-  c(1900,1950,1990,2000,2010,2015)

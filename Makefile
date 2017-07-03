@@ -5,7 +5,7 @@ HTML_FILES=$(RMD_FILES:%.Rmd=%.html)
 CACHE_DIRS=$(RMD_FILES:%.Rmd=%_cache)
 FIGURE_DIRS=$(RMD_FILES:%.Rmd=%_files)
 
-RENDER = Rscript -e "suppressMessages(library(rmarkdown)); render('$<', quiet=TRUE)"
+RENDER = Rscript -e "devtools::load_all();suppressMessages(library(rmarkdown)); render('$<', quiet=TRUE)"
 
 %.html: %.Rmd
 	@echo "\033[35m$< ==> $@\033[0m"
@@ -17,12 +17,12 @@ build: build.done
 
 build.done: $(HTML_FILES)
 	@echo "\033[35mBuilding Package\033[0m"
-	#Rscript -e 'devtools::install(upgrade_dependencies=F)'
+	Rscript -e 'devtools::install(upgrade_dependencies=F)'
 	touch $@
 
 publish:
 	@echo "\033[35mSyncing with gh-pages\033[0m"
-	rsync -av  --exclude '*_cache' --exclude '*.Rmd' --exclude 'tutorials' inst/ ./gh-pages
+	rsync -av  --exclude '*_cache' --exclude '*.Rmd'  inst/ ./gh-pages
 
 clean:
 	@echo "\033[35mCleaning ...\033[0m"

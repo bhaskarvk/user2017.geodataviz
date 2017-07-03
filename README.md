@@ -17,6 +17,11 @@ The goal of user2017.geodataviz is to privide a comprehensive overview of the op
 -   Using `leaflet` and related packages for interactive maps.
 -   Using specialized packages such as `tmap`, `choroplethr`, `ggmap`, `plotly`, `highcharter` etc.
 
+Slides
+------
+
+The tutorial overview and the slides can be found [here](https://bhaskarvk.github.io/user2017.geodataviz/).
+
 Installation
 ------------
 
@@ -105,7 +110,7 @@ From CRAN install
 -   ropenaq
 -   animation
 
-We also need development versions of certain packages, which can be installed from github. FOr each package name below install it using \`devtools::install\_github(<package-repo-name>'). The repository names are given below
+We also need development versions of certain packages, which can be installed from github. FOr each package name below install it using `devtools::install_github(<package-repo-name>')`. The repository names are given below
 
 -   tidyverse/ggplot2
 -   edzer/sfr
@@ -130,6 +135,4 @@ We also need development versions of certain packages, which can be installed fr
 -   oswaldosantos/ggsn
 -   paleolimbot/ggspatial
 -   dgrtwo/gganimate
-
-Slides
-------
+-   bhaskarvk/user2017.rgeodataviz

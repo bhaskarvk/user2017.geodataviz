@@ -6,5 +6,6 @@
 ^docker$
 ^build.done$
 ^data-raw$
-^.*_cache$
+cache$
+inst/presentations/.*_cache
 ^gh-pages$
