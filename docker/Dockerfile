@@ -46,3 +46,4 @@ RUN apt-get update \
   && installGithub.r oswaldosantos/ggsn \
   && installGithub.r paleolimbot/ggspatial \
   && installGithub.r dgrtwo/gganimate \
+  && installGithub.r riatelab/cartography

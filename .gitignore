@@ -10,3 +10,4 @@ build.done
 **/*_files
 gh-pages
 tutorials
+inst/notebooks/*.R

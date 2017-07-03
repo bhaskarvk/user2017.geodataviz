@@ -2,10 +2,12 @@
 ^\.Rproj\.user$
 ^CONDUCT\.md$
 ^README\.Rmd$
+^README\.html$
 ^README-.*\.png$
 ^docker$
 ^build.done$
 ^data-raw$
 cache$
 inst/presentations/.*_cache
+inst/notebooks/.*_cache
 ^gh-pages$

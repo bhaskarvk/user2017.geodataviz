@@ -54,7 +54,8 @@ Remotes: tidyverse/ggplot2,
   - bhaskarvk/leaflet.esri,
   - 'r-spatial/mapview@develop',
   - r-spatial/mapedit,
-  - dkahle/ggmap
+  - dkahle/ggmap,
+  - riatelab/cartography
 VignetteBuilder: knitr
 URL: https://github.com/bhaskarvk/user2017.geodataviz
 BugReports: https://github.com/bhaskarvk/user2017.geodataviz/issues

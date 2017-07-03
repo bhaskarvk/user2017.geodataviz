@@ -135,4 +135,5 @@ We also need development versions of certain packages, which can be installed fr
 -   oswaldosantos/ggsn
 -   paleolimbot/ggspatial
 -   dgrtwo/gganimate
+-   riatelab/cartography
 -   bhaskarvk/user2017.rgeodataviz

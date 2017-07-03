@@ -1,0 +1,141 @@
+---
+title: "Spatial Data"
+output:
+  html_notebook:
+    toc: TRUE
+    toc_float: TRUE
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+This document introduces various R packages for representing spatial data in R. It also explores packages for reading/writing spatial data from external formats.
+
+# Vecor Data Using `sp` Package
+
+## Construct a `sp` object.
+
+Read the `meuse` data.frame and convert it into a spatial object. Explore the result.
+
+```{r sp-01}
+library(sp)
+data(meuse)
+class(meuse)
+colnames(meuse)
+{{ coordinates(meuse) <- ~x+y }}
+{{ proj4string(meuse) <- CRS("+init=epsg:28992") }}
+class(meuse)
+summary(meuse)
+```
+
+## Load `sp` objects from packages.
+
+Load all 'meuse' datasets
+
+```{r sp-02}
+demo(meuse, ask=FALSE)
+```
+
+## Read `sp` objects from files
+
+```{r sp-03}
+library(rgdal)
+dsn <- system.file("vectors", package = "rgdal")[1]
+
+ogrInfo(dsn=dsn, layer="scot_BNG")
+
+OGRSpatialRef(dsn=dsn, layer="scot_BNG")
+
+scot_BNG <- readOGR(dsn=dsn, layer="scot_BNG")
+
+class(scot_BNG)
+
+summary(scot_BNG)
+```
+
+## Selecting/Subsetting
+
+```{r sp-04}
+# 9th and 10th rows, and lead and zinc columns
+meuse[9:10, c('lead','zinc')]
+# Filtering on a criteria
+dim(meuse[meuse$lead>quantile(meuse$lead,.75),])
+
+# Attribute data
+range(meuse[['zinc']])
+```
+
+## Projection Transformation
+
+```{r sp-05}
+proj4string(meuse)
+meuse.latlon <- spTransform(meuse, CRS("+init=epsg:4326")) # What's '+init=epsg:4326' ?
+proj4string(meuse)
+```
+
+## Other Operations
+
+- Vignettes [1](https://cran.r-project.org/web/packages/sp/vignettes/intro_sp.pdf) and [2](https://cran.r-project.org/web/packages/sp/vignettes/over.pdf) for `sp`.
+- Packages [gdistance](https://cran.r-project.org/web/packages/gdistance), [geosphere](https://cran.r-project.org/web/packages/geosphere).
+
+# Vector Data Using `sf` Package
+
+`sf` is the successor to `sp` and provides much faster and `tidyverse` compatible API.
+
+## Read a `sf` Object
+
+```{r sf-01}
+library(sf)
+scot_BNG <- sf::st_read(system.file("vectors", package = "rgdal")[1], 'scot_BNG')
+class(scot_BNG)
+summary(scot_BNG)
+```
+
+## `sf` operations
+
+```{r sf-02}
+# Just the geometry
+scot_BNG.geom <- st_geometry(scot_BNG)
+class(scot_BNG.geom)
+
+# Reprojection
+st_crs(scot_BNG)
+scot_BNG.latlon <- st_transform(scot_BNG, '+init=epsg:4326')
+st_crs(scot_BNG.latlon)
+
+# Centroids
+summary(scot_BNG$geometry)
+scot_BNG.centers <- st_centroid(scot_BNG)
+summary(scot_BNG.centers$geometry)
+```
+
+## Other Operations
+
+```{r sf-03}
+methods(class='sf')
+```
+
+# Vector Data using `vector` Package
+
+## Read Vector file
+
+```{r raster-01}
+library(raster)
+r <- raster(system.file("external/test.grd", package="raster"))
+class(r)
+summary(r)
+```
+
+## `vector` Operations
+
+```{r 04-07, fig.align='center', fig.width=12,fig.height=6}
+r_log <- calc(r, log)
+par(mar=c(5,5,5,5), mfrow=c(1,2))
+hist(r); hist(r_log)
+```
+
+For many more see the `raster` package [vignette](https://cran.r-project.org/web/packages/raster/vignettes/Raster.pdf).
