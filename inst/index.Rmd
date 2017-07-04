@@ -13,6 +13,11 @@ vignette: >
 
 All the code and slides will be made available on my [user2017.geodataviz](https://github.com/bhaskarvk/user2017.geodataviz) github repo before July 3<sup>rd</sup>, 2017.
 
+In addition to the slides, you can also consult the following R Notebooks for an alternative format. Source code for these notebooks is in the same repo as above under `inst/notebooks` directory
+
+- [01-Spatial_Data.nb.html](https://bhaskarvk.github.io/user2017.geodataviz/notebooks/01-Spatial_Data.nb.html)
+- [02-Static-Maps.nb.html](https://bhaskarvk.github.io/user2017.geodataviz/notebooks/02-Static-Maps.nb.html)
+
 #### Pre-Tutorial Setup
 
 Please do this well before the tutorial. The bandwidth at the venue could be very limited and the docker image I will be using is approximately 1.6G. The better prepared you come for the tutorial the more you will get out of it.
