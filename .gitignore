@@ -11,5 +11,6 @@ knit.done
 **/*_files
 gh-pages
 inst/notebooks/*.R
+inst/notebooks/rosm.cache
 inst/presentations/libs
 inst/presentations/skeleton.bib

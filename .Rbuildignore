@@ -17,4 +17,5 @@ inst/presentations/libs
 inst/notebooks/.*_cache
 inst/notebooks/.*_files
 inst/notebooks/.*\.html$
+inst/notebooks/rosm.cache
 ^gh-pages$

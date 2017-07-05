@@ -53,4 +53,4 @@ publish:
 
 clean:
 	@echo "\033[35mCleaning ...\033[0m"
-	rm -rf build.done $(HTML_FILES) $(CACHE_DIRS) $(FIGURE_DIRS) $(NBHTML_FILES) $(NBHTML_CACHE_DIRS) $(NBHTML_FIGURE_DIRS)
+	rm -rf knit.done $(HTML_FILES) $(CACHE_DIRS) $(FIGURE_DIRS) $(NBHTML_FILES) $(NBHTML_CACHE_DIRS) $(NBHTML_FIGURE_DIRS)
