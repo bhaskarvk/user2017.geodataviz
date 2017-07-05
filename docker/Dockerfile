@@ -43,6 +43,7 @@ RUN apt-get update \
   && installGithub.r hrecht/censusapi \
   && installGithub.r ropenscilabs/rnaturalearthhires \
   && installGithub.r ropensci/geoparser \
+  && installGithub.r ropensci/plotly \
   && installGithub.r arilamstein/choroplethrZip \
   && installGithub.r oswaldosantos/ggsn \
   && installGithub.r paleolimbot/ggspatial \

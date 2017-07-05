@@ -1,0 +1,278 @@
+---
+title: "Interactive Maps in R"
+output:
+  html_notebook:
+    toc: TRUE
+    toc_float: TRUE
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(dev = 'svg')
+options(device = function(file, width, height) {
+  svg(tempfile(), width = width, height = height)
+})
+```
+
+This document introduces various techniques for making interactive maps from spatial data.
+
+# Using `ggiraph`
+
+```{r 01, fig.width=6, fig.height=5, fig.align='center'}
+suppressPackageStartupMessages(library(sp))
+suppressPackageStartupMessages(library(sf))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(ggiraph))
+
+world <- sf::st_as_sf(rnaturalearth::countries110)
+internet_usage <- suppressMessages(readr::read_csv(
+  system.file(
+    'extdata','africa-internet_usage-2015.csv',
+    package='user2017.geodataviz')))
+
+africa <- dplyr::filter(world, region_un=='Africa') %>%
+  dplyr::left_join(internet_usage %>% dplyr::select(
+    `Country Code`, `2015 [YR2015]`
+  ) %>% dplyr::rename(iso_a3=`Country Code`, internet.usage.2015=`2015 [YR2015]`),
+  by = 'iso_a3') %>%
+  st_transform(crs="+proj=laea +lon_0=18.984375")
+
+africa.centers <- st_centroid(africa)
+
+africa.spdf <- methods::as(africa, 'Spatial')
+africa.spdf@data$id <- row.names(africa.spdf@data)
+
+africa.tidy <- broom::tidy(africa.spdf)
+africa.tidy <- dplyr::left_join(africa.tidy, africa.spdf@data, by='id')
+
+g <- ggplot(africa.tidy) +
+  geom_polygon_interactive(
+    color='black',
+    aes(long, lat, group=group, fill=internet.usage.2015,
+        tooltip=sprintf("%s<br/>%s",iso_a3,internet.usage.2015))) +
+ hrbrthemes::theme_ipsum() +
+  colormap::scale_fill_colormap(
+    colormap=colormap::colormaps$copper, reverse = T) +
+  labs(title='Internet Usage in Africa in 2015', subtitle='As Percent of Population',
+       caption='Source: World Bank Open Data.')
+
+widgetframe::frameWidget(ggiraph(code=print(g)))
+```
+
+# Using `plotly`
+
+
+```{r 02, eval=FALSE}
+library(plotly)
+usa <- albersusa::usa_sf("laea")
+usd <- crosstalk::SharedData$new(usa)
+p <- ggplot(usd) + geom_sf(aes(fill = pop_2010))
+
+ggplotly(p) %>%
+  highlight(
+    "plotly_hover",
+    selected = attrs_selected(line = list(color = "black"))
+) %>%
+  widgetframe::frameWidget()
+
+```
+
+
+# Using `tmap`
+
+# Using `rbokeh`
+
+```{r 03, fig.width=6, fig.height=5, fig.align='center'}
+library(maps)
+data(world.cities)
+library(rbokeh)
+caps <- dplyr::filter(world.cities, capital == 1)
+caps$population <- prettyNum(caps$pop, big.mark = ",")
+plot <- suppressWarnings(figure(width = 800, height = 450, padding_factor = 0) %>%
+  ly_map("world", col = "gray") %>%
+  ly_points(long, lat, data = caps, size = 5,
+            hover = c(name, country.etc, population)))
+
+widgetframe::frameWidget(plot,width=600,height=400)
+
+```
+
+
+# Using `highcharter`
+
+
+```{r 04, eval=FALSE, fig.width=6, fig.height=5, fig.align='center'}
+library(magrittr)
+
+download_map_data <- highcharter::download_map_data
+get_data_from_map <- highcharter::get_data_from_map
+hcmap <- highcharter::hcmap
+
+mapdata <- get_data_from_map(download_map_data("countries/au/au-all"))
+
+data_fake <- mapdata %>%
+  dplyr::select(code = `hc-a2`) %>%
+  dplyr::mutate(value = 1e5 * abs(rt(nrow(.), df = 10)))
+
+hcmap("countries/au/au-all", data = data_fake, value = "value",
+        joinBy = c("hc-a2", "code"), name = "Fake data",
+        dataLabels = list(enabled = TRUE, format = '{point.name}'),
+        borderColor = "#FAFAFA", borderWidth = 0.1,
+        tooltip = list(valueDecimals = 2, valuePrefix = "$", valueSuffix = " AUD")) %>%
+  highcharter::hc_title(text="Economy Down Under") %>%
+  widgetframe::frameWidget()
+```
+
+# Using `leaflet
+
+
+```{r libs, echo=FALSE, message=FALSE, warning=FALSE}
+suppressPackageStartupMessages(library(widgetframe))
+suppressPackageStartupMessages(library(leaflet))
+suppressPackageStartupMessages(library(leaflet.extras))
+```
+
+
+## Base Maps
+
+```{r 05, fig.width=6, fig.height=4, fig.align='center'}
+l <- leaflet() %>%
+  setView(lat = 50.85045, lng = 4.34878, zoom=13) %>%
+  addTiles(group="OSM") %>%
+  addProviderTiles(providers$CartoDB.DarkMatter, group="Dark") %>%
+  addProviderTiles(providers$CartoDB.Positron, group="Light") %>%
+  addLayersControl(baseGroups=c('OSM','Dark','Light'))
+  
+frameWidget(l)
+```
+
+## Markers
+
+```{r 07-leaflet-04, warning=FALSE}
+quakes.df <- quakes %>% dplyr::mutate(
+    mag.level = cut(mag,c(3.5,4.5,5.5,6.5),
+    labels = c('> 3.5 & <=4.5', '>4.5 & <=5.5', '>5.5 & <=6.5'))) %>%
+  split(.$mag.level)
+
+l <- leaflet() %>%
+  addProviderTiles(providers$Esri.OceanBasemap)
+
+names(quakes.df) %>%
+  purrr::walk( function(df) {
+    l <<- l %>%
+      addMarkers(data=quakes.df[[df]], lng=~long, lat=~lat,
+                 label=~as.character(mag), popup=~as.character(mag),
+                 group = df,
+                 clusterOptions = markerClusterOptions())
+  })
+
+l <- l %>%
+  addLayersControl(
+    overlayGroups = names(quakes.df),
+    options = layersControlOptions(collapsed = FALSE)) %>%
+  addMiniMap(tiles = providers$Esri.OceanBasemap, width = 120, height=80)
+```
+
+```{r 07-leaflet-05, echo=FALSE, fig.width=8, fig.height=6, fig.align='center'}
+l %>%
+frameWidget()
+```
+
+## Polygons
+
+```{r eg leaflet-07, echo=FALSE, warning=FALSE}
+library(magrittr)
+fName <- system.file('extdata','world-population.geo.json',package = 'user2017.geodataviz')
+spdf <- geojsonio::geojson_sp(rmapshaper::ms_simplify(readr::read_file(fName)))
+spdf@data %<>% dplyr::mutate(
+  AREA = as.numeric(as.character(AREA)),
+  POP2005 = as.numeric(as.character(POP2005))
+)
+
+spdf <- subset(
+  spdf,
+  !(is.na(AREA) | AREA <1 | is.na(POP2005) | POP2005<1)
+)
+
+spdf@data %<>%
+  dplyr::mutate(
+  POPDENSITY = POP2005/AREA
+)
+
+spdf.world <- spdf
+```
+
+```{r 07-leaflet-08}
+# spdf is a sp::SpatialPolygonsDataFrame
+qpal <- colorQuantile(rev(viridis::viridis(5)),
+                      spdf$POPDENSITY, n=5)
+
+l <- leaflet(spdf, options =
+               leafletOptions(attributionControl = FALSE, minzoom=1.5)) %>%
+  addPolygons(
+    label=~stringr::str_c(
+      NAME, ' ',
+      formatC(POPDENSITY, big.mark = ',', format='d')),
+    labelOptions= labelOptions(direction = 'auto'),
+    weight=1,color='#333333', opacity=1,
+    fillColor = ~qpal(POPDENSITY), fillOpacity = 1,
+    highlightOptions = highlightOptions(
+      color='#000000', weight = 2,
+      bringToFront = TRUE, sendToBack = TRUE)
+    ) %>%
+  addLegend(
+    "topright", pal = qpal, values = ~POPDENSITY,
+    title = htmltools::HTML("Population Density<br/>(2005)"),
+    opacity = 1 )
+
+```
+
+```{r 07-leaflet-09, echo=FALSE, fig.width=8, fig.height=6, fig.align='center'}
+l %>% setMapWidgetStyle() %>%
+  frameWidget()
+```
+
+
+## Projections 01
+
+```{r 07-leaflet-12}
+spdf <- spdf.world
+crs.molvidde <- leafletCRS(
+  crsClass="L.Proj.CRS", code='ESRI:53009',
+  proj4def= '+proj=moll +lon_0=0 +x_0=0 +y_0=0 +a=6371000 +b=6371000 +units=m +no_defs',
+  resolutions = c(65536, 32768, 16384, 8192, 4096, 2048))
+
+l <- leaflet(
+  spdf,
+  options = leafletOptions(
+    maxZoom = 5, crs= crs.molvidde, attributionControl = FALSE)) %>%
+  addGraticule(style= list(color= '#999', weight= 0.5, opacity= 1)) %>%
+  addGraticule(sphere = TRUE,
+               style= list(color= '#777', weight= 1, opacity= 0.25)) %>%
+  addPolygons(
+    label=~stringr::str_c(
+      NAME, ' ', formatC(POPDENSITY, big.mark = ',', format='d')),
+    labelOptions= labelOptions(direction = 'auto'),
+    weight=1,color='#ffffff', opacity=1,
+    fillColor = ~qpal(POPDENSITY), fillOpacity = 1,
+    highlightOptions = highlightOptions(
+      color='#000000', weight = 2,
+      bringToFront = TRUE, sendToBack = TRUE)) 
+```
+
+```{r 07-leaflet-13, echo=FALSE, fig.width=8, fig.height=6, fig.align='center'}
+l %>%
+  setView(10,0,0.5) %>% setMapWidgetStyle() %>%
+  frameWidget()
+```
+
+
+
+## Projections 02
+
+## `leaflet.extras`
+
+## `leaflet` + `crosstalk`

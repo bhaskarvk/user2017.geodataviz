@@ -77,7 +77,7 @@ From CRAN install
   - geosphere
   - maps
   - maptools
-- gdalUtils
+  - gdalUtils
   - cleangeo
   - rmapshaper
   - spatstat
@@ -145,6 +145,7 @@ We also need development versions of certain packages, which can be installed fr
   - hrecht/censusapi
   - ropenscilabs/rnaturalearthhires
   - ropensci/geoparser
+  - ropensci/plotly
   - arilamstein/choroplethrZip
   - oswaldosantos/ggsn
   - paleolimbot/ggspatial

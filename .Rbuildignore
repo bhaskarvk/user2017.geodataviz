@@ -9,5 +9,10 @@
 ^data-raw$
 cache$
 inst/presentations/.*_cache
+inst/presentations/.*_files
+inst/presentations/.*\.html$
+inst/presentations/libs
 inst/notebooks/.*_cache
+inst/notebooks/.*_files
+inst/notebooks/.*\.html$
 ^gh-pages$

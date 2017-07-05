@@ -9,5 +9,6 @@ build.done
 **/*.html
 **/*_files
 gh-pages
-tutorials
 inst/notebooks/*.R
+inst/presentations/libs
+inst/presentations/skeleton.bib
