@@ -383,6 +383,7 @@ tmap::qtm(usa, fill=paste0("p.",years), title=years,
 ```r
 library(ggplot2)
 library(ggmap)
+library(magrittr)
 
 paste0("2016-0",1:7) %&gt;%
   purrr::map(function(month) {
