@@ -5,6 +5,7 @@
 *.swp
 .DS_Store
 build.done
+knit.done
 **/*_cache
 **/*.html
 **/*_files

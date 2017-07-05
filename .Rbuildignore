@@ -5,7 +5,9 @@
 ^README\.html$
 ^README-.*\.png$
 ^docker$
+^Makefile$
 ^build.done$
+^knit.done$
 ^data-raw$
 cache$
 inst/presentations/.*_cache

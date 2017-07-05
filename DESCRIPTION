@@ -71,7 +71,7 @@ Remotes: tidyverse/ggplot2,
   - 'r-spatial/mapview@develop',
   - r-spatial/mapedit,
   - dkahle/ggmap,
-  - riatelab/cartography
+  - riatelab/cartography,
   - ropensci/plotly
 VignetteBuilder: knitr
 URL: https://github.com/bhaskarvk/user2017.geodataviz

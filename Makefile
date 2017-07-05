@@ -26,21 +26,30 @@ RENDER = Rscript -e "devtools::load_all();suppressMessages(library(rmarkdown)); 
 	@echo "\033[35m$< ==> $@\033[0m"
 	$(RENDER)
 
-all: build publish
+all: knit publish
 
-build: build.done
+knit: knit.done
 
-build.done: $(HTML_FILES) $(NBHTML_FILES)
+knit.done: $(HTML_FILES) $(NBHTML_FILES)
 	@echo "\033[35mBuilding Package\033[0m"
 	touch $@
 
-install: build
-	Rscript -e 'devtools::install(upgrade_dependencies=F, dependencies=F, quick=T)'
+build: knit
+	Rscript -e 'devtools::build()'
+
+check: knit
+	Rscript -e 'devtools::check()'
+
+install: knit
+	Rscript -e 'devtools::install(local=F, upgrade_dependencies=F, dependencies=F, quick=T)'
 
 # This requires a gh-pages worktree setup to sync with gh-pages branch.
 publish:
 	@echo "\033[35mSyncing with gh-pages\033[0m"
-	rsync -av  --exclude '*_cache' --exclude '*.Rmd' --exclude extdata --exclude 'noteboos/*.R'  inst/ ./gh-pages
+	if [ -d "./gh-pages" ]; then \
+		rsync -av  --exclude '*_cache' --exclude '*.Rmd' --exclude extdata \
+		--exclude 'noteboos/*.R'  inst/ ./gh-pages; \
+	fi;
 
 clean:
 	@echo "\033[35mCleaning ...\033[0m"
