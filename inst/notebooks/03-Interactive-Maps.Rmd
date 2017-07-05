@@ -15,6 +15,7 @@ knitr::opts_chunk$set(dev = 'svg')
 options(device = function(file, width, height) {
   svg(tempfile(), width = width, height = height)
 })
+library(magrittr)
 ```
 
 This document introduces various techniques for making interactive maps from spatial data.

@@ -23,6 +23,7 @@ editor_options:
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(cache = TRUE)
+library(magrittr)
 ```
 
 # Options to Display Maps

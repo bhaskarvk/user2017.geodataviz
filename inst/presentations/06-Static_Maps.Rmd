@@ -27,6 +27,7 @@ options(device = function(file, width, height) {
   svg(tempfile(), width = width, height = height)
 })
 knitr::opts_chunk$set(cache = TRUE)
+library(magrittr)
 ```
 
 # Ways To Create Static Maps
@@ -468,6 +469,7 @@ tmap::qtm(usa, fill=paste0("p.",years), title=years,
 ```{r 06-16, eval=FALSE}
 library(ggplot2)
 library(ggmap)
+library(magrittr)
 
 paste0("2016-0",1:7) %>%
   purrr::map(function(month) {
@@ -493,6 +495,7 @@ qmplot(Longitude, Latitude, data=crimes, geom="blank", zoom=15,
 ```{r 06-17, echo=FALSE,  fig.width=10, fig.height=6, fig.align='center'}
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(ggmap))
+suppressPackageStartupMessages(library(magrittr))
 
 paste0("2016-0",1:7) %>%
   purrr::map(function(month) {

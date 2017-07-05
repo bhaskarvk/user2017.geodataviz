@@ -28,7 +28,6 @@ options(device = function(file, width, height) {
 })
 knitr::opts_chunk$set(cache = TRUE)
 library(magrittr)
-
 ```
 
 # `ggiraph` for simple effects

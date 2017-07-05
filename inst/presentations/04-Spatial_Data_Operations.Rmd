@@ -27,6 +27,7 @@ options(device = function(file, width, height) {
   svg(tempfile(), width = width, height = height)
 })
 knitr::opts_chunk$set(cache = TRUE)
+library(magrittr)
 ```
 
 # Selectiing features/fields `sp` objects

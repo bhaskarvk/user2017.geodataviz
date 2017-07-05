@@ -11,6 +11,7 @@ editor_options:
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(cache = TRUE)
+library(magrittr)
 ```
 
 This document introduces various R packages for representing spatial data in R. It also explores packages for reading/writing spatial data from external formats.
