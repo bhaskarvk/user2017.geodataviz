@@ -83,7 +83,7 @@ class: inverse center middle
 
 ---
 
-# A smaple `sp` Object
+# A sample `sp` Object
 
 ```{r sp-01}
 suppressPackageStartupMessages(library(sp))
