@@ -48,7 +48,7 @@ publish:
 	@echo "\033[35mSyncing with gh-pages\033[0m"
 	if [ -d "./gh-pages" ]; then \
 		rsync -av  --exclude '*_cache' --exclude '*.Rmd' --exclude extdata \
-		--exclude 'noteboos/*.R'  inst/ ./gh-pages; \
+		--exclude 'notebooks/*.R' --exclude 'notebooks/rosm.cache'  inst/ ./gh-pages; \
 	fi;
 
 clean:
