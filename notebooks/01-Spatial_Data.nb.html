@@ -280,9 +280,14 @@ div.tocify {
 <p>Read the <code>meuse</code> data.frame and convert it into a spatial object. Explore the result.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjpbImxpYnJhcnkoc3ApIiwiZGF0YShtZXVzZSkiLCJwcmludChjbGFzcyhtZXVzZSkpIl19 -->
-<pre class="r"><code>library(sp)
-data(meuse)
+<!-- rnb-source-begin eyJkYXRhIjoibGlicmFyeShzcCkifQ== -->
+<pre class="r"><code>library(sp)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-message-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBtZXRob2RzXG4ifQ== -->
+<pre><code>Loading required package: methods</code></pre>
+<!-- rnb-message-end -->
+<!-- rnb-source-begin eyJkYXRhIjpbImRhdGEobWV1c2UpIiwicHJpbnQoY2xhc3MobWV1c2UpKSJdfQ== -->
+<pre class="r"><code>data(meuse)
 print(class(meuse))</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiZGF0YS5mcmFtZVwiXG4ifQ== -->
@@ -359,41 +364,71 @@ Data attributes:
 <!-- rnb-source-begin eyJkYXRhIjoiZGVtbyhcIm1ldXNlXCIsIGFzaz1GQUxTRSkifQ== -->
 <pre class="r"><code>demo(&quot;meuse&quot;, ask=FALSE)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5cblx0ZGVtbyhtZXVzZSlcblx0LS0tLSB+fn5+flxuXG4+IHJlcXVpcmUoc3ApXG5cbj4gY3JzID0gQ1JTKFwiK2luaXQ9ZXBzZzoyODk5MlwiKVxuXG4+IGRhdGEoXCJtZXVzZVwiKVxuXG4+IGNvb3JkaW5hdGVzKG1ldXNlKSA8LSB+eCt5XG5cbj4gcHJvajRzdHJpbmcobWV1c2UpIDwtIGNyc1xuXG4+IGRhdGEoXCJtZXVzZS5ncmlkXCIpXG5cbj4gY29vcmRpbmF0ZXMobWV1c2UuZ3JpZCkgPC0gfngreVxuXG4+IGdyaWRkZWQobWV1c2UuZ3JpZCkgPC0gVFJVRVxuXG4+IHByb2o0c3RyaW5nKG1ldXNlLmdyaWQpIDwtIGNyc1xuXG4+IGRhdGEoXCJtZXVzZS5yaXZcIilcblxuPiBtZXVzZS5yaXYgPC0gU3BhdGlhbFBvbHlnb25zKGxpc3QoUG9seWdvbnMobGlzdChQb2x5Z29uKG1ldXNlLnJpdikpLFwibWV1c2Uucml2XCIpKSlcblxuPiBwcm9qNHN0cmluZyhtZXVzZS5yaXYpIDwtIGNyc1xuXG4+IGRhdGEoXCJtZXVzZS5hcmVhXCIpXG5cbj4gbWV1c2UuYXJlYSA9IFNwYXRpYWxQb2x5Z29ucyhsaXN0KFBvbHlnb25zKGxpc3QoUG9seWdvbihtZXVzZS5hcmVhKSksIFwiYXJlYVwiKSkpXG5cbj4gcHJvajRzdHJpbmcobWV1c2UuYXJlYSkgPC0gY3JzXG4ifQ== -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5cblx0ZGVtbyhtZXVzZSlcblx0LS0tLSB+fn5+flxuXG5cblx1MDAxYlszMm3inJRcdTAwMWJbMzltIFx1MDAxYlszODs1OzI0OG0gXHUwMDFiWzM5bVx1MDAxYlszNG11c2VyMjAxNy5nZW9kYXRhdml6IFx1MDAxYlszOW1cdTAwMWJbMzg7NTsyNDhtbWFzdGVyKlx1MDAxYlszOW1cbuKdryByZXF1aXJlKHNwKVxuXG5cblx1MDAxYlszMm3inJRcdTAwMWJbMzltIFx1MDAxYlszODs1OzI0OG0gXHUwMDFiWzM5bVx1MDAxYlszNG11c2VyMjAxNy5nZW9kYXRhdml6IFx1MDAxYlszOW1cdTAwMWJbMzg7NTsyNDhtbWFzdGVyKlx1MDAxYlszOW1cbuKdryBjcnMgPSBDUlMoXCIraW5pdD1lcHNnOjI4OTkyXCIpXG5cblxuXHUwMDFiWzMybeKclFx1MDAxYlszOW0gXHUwMDFiWzM4OzU7MjQ4bSBcdTAwMWJbMzltXHUwMDFiWzM0bXVzZXIyMDE3Lmdlb2RhdGF2aXogXHUwMDFiWzM5bVx1MDAxYlszODs1OzI0OG1tYXN0ZXIqXHUwMDFiWzM5bVxu4p2vIGRhdGEoXCJtZXVzZVwiKVxuXG5cblx1MDAxYlszMm3inJRcdTAwMWJbMzltIFx1MDAxYlszODs1OzI0OG0gXHUwMDFiWzM5bVx1MDAxYlszNG11c2VyMjAxNy5nZW9kYXRhdml6IFx1MDAxYlszOW1cdTAwMWJbMzg7NTsyNDhtbWFzdGVyKlx1MDAxYlszOW1cbuKdryBjb29yZGluYXRlcyhtZXVzZSkgPC0gfngreVxuXG5cblx1MDAxYlszMm3inJRcdTAwMWJbMzltIFx1MDAxYlszODs1OzI0OG0gXHUwMDFiWzM5bVx1MDAxYlszNG11c2VyMjAxNy5nZW9kYXRhdml6IFx1MDAxYlszOW1cdTAwMWJbMzg7NTsyNDhtbWFzdGVyKlx1MDAxYlszOW1cbuKdryBwcm9qNHN0cmluZyhtZXVzZSkgPC0gY3JzXG5cblxuXHUwMDFiWzMybeKclFx1MDAxYlszOW0gXHUwMDFiWzM4OzU7MjQ4bSBcdTAwMWJbMzltXHUwMDFiWzM0bXVzZXIyMDE3Lmdlb2RhdGF2aXogXHUwMDFiWzM5bVx1MDAxYlszODs1OzI0OG1tYXN0ZXIqXHUwMDFiWzM5bVxu4p2vIGRhdGEoXCJtZXVzZS5ncmlkXCIpXG5cblxuXHUwMDFiWzMybeKclFx1MDAxYlszOW0gXHUwMDFiWzM4OzU7MjQ4bSBcdTAwMWJbMzltXHUwMDFiWzM0bXVzZXIyMDE3Lmdlb2RhdGF2aXogXHUwMDFiWzM5bVx1MDAxYlszODs1OzI0OG1tYXN0ZXIqXHUwMDFiWzM5bVxu4p2vIGNvb3JkaW5hdGVzKG1ldXNlLmdyaWQpIDwtIH54K3lcblxuXG5cdTAwMWJbMzJt4pyUXHUwMDFiWzM5bSBcdTAwMWJbMzg7NTsyNDhtIFx1MDAxYlszOW1cdTAwMWJbMzRtdXNlcjIwMTcuZ2VvZGF0YXZpeiBcdTAwMWJbMzltXHUwMDFiWzM4OzU7MjQ4bW1hc3RlcipcdTAwMWJbMzltXG7ina8gZ3JpZGRlZChtZXVzZS5ncmlkKSA8LSBUUlVFXG5cblxuXHUwMDFiWzMybeKclFx1MDAxYlszOW0gXHUwMDFiWzM4OzU7MjQ4bSBcdTAwMWJbMzltXHUwMDFiWzM0bXVzZXIyMDE3Lmdlb2RhdGF2aXogXHUwMDFiWzM5bVx1MDAxYlszODs1OzI0OG1tYXN0ZXIqXHUwMDFiWzM5bVxu4p2vIHByb2o0c3RyaW5nKG1ldXNlLmdyaWQpIDwtIGNyc1xuXG5cblx1MDAxYlszMm3inJRcdTAwMWJbMzltIFx1MDAxYlszODs1OzI0OG0gXHUwMDFiWzM5bVx1MDAxYlszNG11c2VyMjAxNy5nZW9kYXRhdml6IFx1MDAxYlszOW1cdTAwMWJbMzg7NTsyNDhtbWFzdGVyKlx1MDAxYlszOW1cbuKdryBkYXRhKFwibWV1c2Uucml2XCIpXG5cblxuXHUwMDFiWzMybeKclFx1MDAxYlszOW0gXHUwMDFiWzM4OzU7MjQ4bSBcdTAwMWJbMzltXHUwMDFiWzM0bXVzZXIyMDE3Lmdlb2RhdGF2aXogXHUwMDFiWzM5bVx1MDAxYlszODs1OzI0OG1tYXN0ZXIqXHUwMDFiWzM5bVxu4p2vIG1ldXNlLnJpdiA8LSBTcGF0aWFsUG9seWdvbnMobGlzdChQb2x5Z29ucyhsaXN0KFBvbHlnb24obWV1c2Uucml2KSksXCJtZXVzZS5yaXZcIikpKVxuXG5cblx1MDAxYlszMm3inJRcdTAwMWJbMzltIFx1MDAxYlszODs1OzI0OG0gXHUwMDFiWzM5bVx1MDAxYlszNG11c2VyMjAxNy5nZW9kYXRhdml6IFx1MDAxYlszOW1cdTAwMWJbMzg7NTsyNDhtbWFzdGVyKlx1MDAxYlszOW1cbuKdryBwcm9qNHN0cmluZyhtZXVzZS5yaXYpIDwtIGNyc1xuXG5cblx1MDAxYlszMm3inJRcdTAwMWJbMzltIFx1MDAxYlszODs1OzI0OG0gXHUwMDFiWzM5bVx1MDAxYlszNG11c2VyMjAxNy5nZW9kYXRhdml6IFx1MDAxYlszOW1cdTAwMWJbMzg7NTsyNDhtbWFzdGVyKlx1MDAxYlszOW1cbuKdryBkYXRhKFwibWV1c2UuYXJlYVwiKVxuXG5cblx1MDAxYlszMm3inJRcdTAwMWJbMzltIFx1MDAxYlszODs1OzI0OG0gXHUwMDFiWzM5bVx1MDAxYlszNG11c2VyMjAxNy5nZW9kYXRhdml6IFx1MDAxYlszOW1cdTAwMWJbMzg7NTsyNDhtbWFzdGVyKlx1MDAxYlszOW1cbuKdryBtZXVzZS5hcmVhID0gU3BhdGlhbFBvbHlnb25zKGxpc3QoUG9seWdvbnMobGlzdChQb2x5Z29uKG1ldXNlLmFyZWEpKSwgXCJhcmVhXCIpKSlcblxuXG5cdTAwMWJbMzJt4pyUXHUwMDFiWzM5bSBcdTAwMWJbMzg7NTsyNDhtIFx1MDAxYlszOW1cdTAwMWJbMzRtdXNlcjIwMTcuZ2VvZGF0YXZpeiBcdTAwMWJbMzltXHUwMDFiWzM4OzU7MjQ4bW1hc3RlcipcdTAwMWJbMzltXG7ina8gcHJvajRzdHJpbmcobWV1c2UuYXJlYSkgPC0gY3JzXG4ifQ== -->
 <pre><code>
 
     demo(meuse)
     ---- ~~~~~
 
-&gt; require(sp)
 
-&gt; crs = CRS(&quot;+init=epsg:28992&quot;)
+[32m✔[39m [38;5;248m [39m[34muser2017.geodataviz [39m[38;5;248mmaster*[39m
+❯ require(sp)
 
-&gt; data(&quot;meuse&quot;)
 
-&gt; coordinates(meuse) &lt;- ~x+y
+[32m✔[39m [38;5;248m [39m[34muser2017.geodataviz [39m[38;5;248mmaster*[39m
+❯ crs = CRS(&quot;+init=epsg:28992&quot;)
 
-&gt; proj4string(meuse) &lt;- crs
 
-&gt; data(&quot;meuse.grid&quot;)
+[32m✔[39m [38;5;248m [39m[34muser2017.geodataviz [39m[38;5;248mmaster*[39m
+❯ data(&quot;meuse&quot;)
 
-&gt; coordinates(meuse.grid) &lt;- ~x+y
 
-&gt; gridded(meuse.grid) &lt;- TRUE
+[32m✔[39m [38;5;248m [39m[34muser2017.geodataviz [39m[38;5;248mmaster*[39m
+❯ coordinates(meuse) &lt;- ~x+y
 
-&gt; proj4string(meuse.grid) &lt;- crs
 
-&gt; data(&quot;meuse.riv&quot;)
+[32m✔[39m [38;5;248m [39m[34muser2017.geodataviz [39m[38;5;248mmaster*[39m
+❯ proj4string(meuse) &lt;- crs
 
-&gt; meuse.riv &lt;- SpatialPolygons(list(Polygons(list(Polygon(meuse.riv)),&quot;meuse.riv&quot;)))
 
-&gt; proj4string(meuse.riv) &lt;- crs
+[32m✔[39m [38;5;248m [39m[34muser2017.geodataviz [39m[38;5;248mmaster*[39m
+❯ data(&quot;meuse.grid&quot;)
 
-&gt; data(&quot;meuse.area&quot;)
 
-&gt; meuse.area = SpatialPolygons(list(Polygons(list(Polygon(meuse.area)), &quot;area&quot;)))
+[32m✔[39m [38;5;248m [39m[34muser2017.geodataviz [39m[38;5;248mmaster*[39m
+❯ coordinates(meuse.grid) &lt;- ~x+y
 
-&gt; proj4string(meuse.area) &lt;- crs</code></pre>
+
+[32m✔[39m [38;5;248m [39m[34muser2017.geodataviz [39m[38;5;248mmaster*[39m
+❯ gridded(meuse.grid) &lt;- TRUE
+
+
+[32m✔[39m [38;5;248m [39m[34muser2017.geodataviz [39m[38;5;248mmaster*[39m
+❯ proj4string(meuse.grid) &lt;- crs
+
+
+[32m✔[39m [38;5;248m [39m[34muser2017.geodataviz [39m[38;5;248mmaster*[39m
+❯ data(&quot;meuse.riv&quot;)
+
+
+[32m✔[39m [38;5;248m [39m[34muser2017.geodataviz [39m[38;5;248mmaster*[39m
+❯ meuse.riv &lt;- SpatialPolygons(list(Polygons(list(Polygon(meuse.riv)),&quot;meuse.riv&quot;)))
+
+
+[32m✔[39m [38;5;248m [39m[34muser2017.geodataviz [39m[38;5;248mmaster*[39m
+❯ proj4string(meuse.riv) &lt;- crs
+
+
+[32m✔[39m [38;5;248m [39m[34muser2017.geodataviz [39m[38;5;248mmaster*[39m
+❯ data(&quot;meuse.area&quot;)
+
+
+[32m✔[39m [38;5;248m [39m[34muser2017.geodataviz [39m[38;5;248mmaster*[39m
+❯ meuse.area = SpatialPolygons(list(Polygons(list(Polygon(meuse.area)), &quot;area&quot;)))
+
+
+[32m✔[39m [38;5;248m [39m[34muser2017.geodataviz [39m[38;5;248mmaster*[39m
+❯ proj4string(meuse.area) &lt;- crs</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -402,9 +437,20 @@ Data attributes:
 <h2>Read <code>sp</code> objects from files</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjpbImxpYnJhcnkocmdkYWwpIiwiZHNuIDwtIHN5c3RlbS5maWxlKFwidmVjdG9yc1wiLCBwYWNrYWdlID0gXCJyZ2RhbFwiKVsxXSIsIiIsIm9nckluZm8oZHNuPWRzbiwgbGF5ZXI9XCJzY290X0JOR1wiKSJdfQ== -->
-<pre class="r"><code>library(rgdal)
-dsn &lt;- system.file(&quot;vectors&quot;, package = &quot;rgdal&quot;)[1]
+<!-- rnb-source-begin eyJkYXRhIjoibGlicmFyeShyZ2RhbCkifQ== -->
+<pre class="r"><code>library(rgdal)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-message-begin eyJkYXRhIjoicmdkYWw6IHZlcnNpb246IDEuMi04LCAoU1ZOIHJldmlzaW9uIDY2MylcbiBHZW9zcGF0aWFsIERhdGEgQWJzdHJhY3Rpb24gTGlicmFyeSBleHRlbnNpb25zIHRvIFIgc3VjY2Vzc2Z1bGx5IGxvYWRlZFxuIExvYWRlZCBHREFMIHJ1bnRpbWU6IEdEQUwgMi4xLjMsIHJlbGVhc2VkIDIwMTcvMjAvMDFcbiBQYXRoIHRvIEdEQUwgc2hhcmVkIGZpbGVzOiAvdXNyL3NoYXJlL2dkYWwvMi4xXG4gTG9hZGVkIFBST0ouNCBydW50aW1lOiBSZWwuIDQuOS4yLCAwOCBTZXB0ZW1iZXIgMjAxNSwgW1BKX1ZFUlNJT046IDQ5Ml1cbiBQYXRoIHRvIFBST0ouNCBzaGFyZWQgZmlsZXM6IChhdXRvZGV0ZWN0ZWQpXG4gTGlua2luZyB0byBzcCB2ZXJzaW9uOiAxLjItNSBcbiJ9 -->
+<pre><code>rgdal: version: 1.2-8, (SVN revision 663)
+ Geospatial Data Abstraction Library extensions to R successfully loaded
+ Loaded GDAL runtime: GDAL 2.1.3, released 2017/20/01
+ Path to GDAL shared files: /usr/share/gdal/2.1
+ Loaded PROJ.4 runtime: Rel. 4.9.2, 08 September 2015, [PJ_VERSION: 492]
+ Path to PROJ.4 shared files: (autodetected)
+ Linking to sp version: 1.2-5 </code></pre>
+<!-- rnb-message-end -->
+<!-- rnb-source-begin eyJkYXRhIjpbImRzbiA8LSBzeXN0ZW0uZmlsZShcInZlY3RvcnNcIiwgcGFja2FnZSA9IFwicmdkYWxcIilbMV0iLCIiLCJvZ3JJbmZvKGRzbj1kc24sIGxheWVyPVwic2NvdF9CTkdcIikiXX0= -->
+<pre class="r"><code>dsn &lt;- system.file(&quot;vectors&quot;, package = &quot;rgdal&quot;)[1]
 
 ogrInfo(dsn=dsn, layer=&quot;scot_BNG&quot;)</code></pre>
 <!-- rnb-source-end -->
@@ -513,15 +559,10 @@ Data attributes:
 <pre class="r"><code># 9th and 10th rows, and lead and zinc columns
 meuse[9:10, c('lead','zinc')]</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiY2xhc3MgICAgICAgOiBTcGF0aWFsUG9pbnRzRGF0YUZyYW1lIFxuZmVhdHVyZXMgICAgOiAyIFxuZXh0ZW50ICAgICAgOiAxODEwNjAsIDE4MTIzMiwgMzMzMTY4LCAzMzMyMzEgICh4bWluLCB4bWF4LCB5bWluLCB5bWF4KVxuY29vcmQuIHJlZi4gOiAraW5pdD1lcHNnOjI4OTkyICtwcm9qPXN0ZXJlYSArbGF0XzA9NTIuMTU2MTYwNTU1NTU1NTUgK2xvbl8wPTUuMzg3NjM4ODg4ODg4ODkgK2s9MC45OTk5MDc5ICt4XzA9MTU1MDAwICt5XzA9NDYzMDAwICtlbGxwcz1iZXNzZWwgK3Rvd2dzODQ9NTY1LjQxNzEsNTAuMzMxOSw0NjUuNTUyNCwtMC4zOTg5NTczODgyNDMxMzQsMC4zNDM5ODc4MTczNzgyODMsLTEuODc3NDAxNjM5OTgwNDUsNC4wNzI1ICt1bml0cz1tICtub19kZWZzIFxudmFyaWFibGVzICAgOiAyXG5uYW1lcyAgICAgICA6IGxlYWQsIHppbmMgXG5taW4gdmFsdWVzICA6ICAgODAsICAxODMgXG5tYXggdmFsdWVzICA6ICAxMzMsICAzNDcgXG4ifQ== -->
-<pre><code>class       : SpatialPointsDataFrame 
-features    : 2 
-extent      : 181060, 181232, 333168, 333231  (xmin, xmax, ymin, ymax)
-coord. ref. : +init=epsg:28992 +proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.4171,50.3319,465.5524,-0.398957388243134,0.343987817378283,-1.87740163998045,4.0725 +units=m +no_defs 
-variables   : 2
-names       : lead, zinc 
-min values  :   80,  183 
-max values  :  133,  347 </code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICBjb29yZGluYXRlcyBsZWFkIHppbmNcbjkgICgxODEwNjAsIDMzMzIzMSkgIDEzMyAgMzQ3XG4xMCAoMTgxMjMyLCAzMzMxNjgpICAgODAgIDE4M1xuIn0= -->
+<pre><code>        coordinates lead zinc
+9  (181060, 333231)  133  347
+10 (181232, 333168)   80  183</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-source-begin eyJkYXRhIjpbIiMgRmlsdGVyaW5nIG9uIGEgY3JpdGVyaWEiLCJkaW0obWV1c2VbbWV1c2UkbGVhZD5xdWFudGlsZShtZXVzZSRsZWFkLC43NSksXSkiXX0= -->
 <pre class="r"><code># Filtering on a criteria
@@ -575,9 +616,14 @@ print(proj4string(meuse))</code></pre>
 <h2>Read a <code>sf</code> Object</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjpbImxpYnJhcnkoc2YpIiwic2NvdF9CTkcgPC0gc2Y6OnN0X3JlYWQoc3lzdGVtLmZpbGUoXCJ2ZWN0b3JzXCIsIHBhY2thZ2UgPSBcInJnZGFsXCIpWzFdLCAnc2NvdF9CTkcnKSJdfQ== -->
-<pre class="r"><code>library(sf)
-scot_BNG &lt;- sf::st_read(system.file(&quot;vectors&quot;, package = &quot;rgdal&quot;)[1], 'scot_BNG')</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoibGlicmFyeShzZikifQ== -->
+<pre class="r"><code>library(sf)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-message-begin eyJkYXRhIjoiTGlua2luZyB0byBHRU9TIDMuNS4xLCBHREFMIDIuMS4zLCBwcm9qLjQgNC45LjIsIGx3Z2VvbSAyLjMuMiByMTUzMDJcbiJ9 -->
+<pre><code>Linking to GEOS 3.5.1, GDAL 2.1.3, proj.4 4.9.2, lwgeom 2.3.2 r15302</code></pre>
+<!-- rnb-message-end -->
+<!-- rnb-source-begin eyJkYXRhIjoic2NvdF9CTkcgPC0gc2Y6OnN0X3JlYWQoc3lzdGVtLmZpbGUoXCJ2ZWN0b3JzXCIsIHBhY2thZ2UgPSBcInJnZGFsXCIpWzFdLCAnc2NvdF9CTkcnKSJ9 -->
+<pre class="r"><code>scot_BNG &lt;- sf::st_read(system.file(&quot;vectors&quot;, package = &quot;rgdal&quot;)[1], 'scot_BNG')</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiUmVhZGluZyBsYXllciBgc2NvdF9CTkcnIGZyb20gZGF0YSBzb3VyY2UgYC9ob21lL2JoYXNrYXIvTGlicmFyeS9SLzMueC9jcmFuL3JnZGFsL3ZlY3RvcnMnIHVzaW5nIGRyaXZlciBgRVNSSSBTaGFwZWZpbGUnXG5TaW1wbGUgZmVhdHVyZSBjb2xsZWN0aW9uIHdpdGggNTYgZmVhdHVyZXMgYW5kIDEzIGZpZWxkc1xuZ2VvbWV0cnkgdHlwZTogIE1VTFRJUE9MWUdPTlxuZGltZW5zaW9uOiAgICAgIFhZXG5iYm94OiAgICAgICAgICAgeG1pbjogNzA5NC41NTIgeW1pbjogNTI5NDk1IHhtYXg6IDQ2ODI4NS41IHltYXg6IDEyMTgzNDJcbmVwc2cgKFNSSUQpOiAgICBOQVxucHJvajRzdHJpbmc6ICAgICtwcm9qPXRtZXJjICtsYXRfMD00OSArbG9uXzA9LTIgK2s9MC45OTk2MDEyNzE3ICt4XzA9NDAwMDAwICt5XzA9LTEwMDAwMCArZGF0dW09T1NHQjM2ICt1bml0cz1tICtub19kZWZzXG4ifQ== -->
 <pre><code>Reading layer `scot_BNG' from data source `/home/bhaskar/Library/R/3.x/cran/rgdal/vectors' using driver `ESRI Shapefile'
@@ -728,9 +774,20 @@ see '?methods' for accessing help and source code</code></pre>
 <h2>Read a Raster file</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjpbImxpYnJhcnkocmFzdGVyKSIsInIgPC0gcmFzdGVyKHN5c3RlbS5maWxlKFwiZXh0ZXJuYWwvdGVzdC5ncmRcIiwgcGFja2FnZT1cInJhc3RlclwiKSkiLCJwcmludChjbGFzcyhyKSkiXX0= -->
-<pre class="r"><code>library(raster)
-r &lt;- raster(system.file(&quot;external/test.grd&quot;, package=&quot;raster&quot;))
+<!-- rnb-source-begin eyJkYXRhIjoibGlicmFyeShyYXN0ZXIpIn0= -->
+<pre class="r"><code>library(raster)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-message-begin eyJkYXRhIjoiXG5BdHRhY2hpbmcgcGFja2FnZTogJ3Jhc3RlcidcbiJ9 -->
+<pre><code>
+Attaching package: 'raster'</code></pre>
+<!-- rnb-message-end -->
+<!-- rnb-message-begin eyJkYXRhIjoiVGhlIGZvbGxvd2luZyBvYmplY3QgaXMgbWFza2VkIGZyb20gJ3BhY2thZ2U6bWFncml0dHInOlxuXG4gICAgZXh0cmFjdFxuIn0= -->
+<pre><code>The following object is masked from 'package:magrittr':
+
+    extract</code></pre>
+<!-- rnb-message-end -->
+<!-- rnb-source-begin eyJkYXRhIjpbInIgPC0gcmFzdGVyKHN5c3RlbS5maWxlKFwiZXh0ZXJuYWwvdGVzdC5ncmRcIiwgcGFja2FnZT1cInJhc3RlclwiKSkiLCJwcmludChjbGFzcyhyKSkiXX0= -->
+<pre class="r"><code>r &lt;- raster(system.file(&quot;external/test.grd&quot;, package=&quot;raster&quot;))
 print(class(r))</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiUmFzdGVyTGF5ZXJcIlxuYXR0cigsXCJwYWNrYWdlXCIpXG5bMV0gXCJyYXN0ZXJcIlxuIn0= -->
