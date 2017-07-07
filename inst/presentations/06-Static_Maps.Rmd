@@ -570,6 +570,6 @@ class: inverse middle
 
 # Part 5: The End!
 
-Continue to [Part 7: Interactive Maps](07-Interactive Maps.html)
+Continue to [Part 7: Interactive Maps](07-Interactive_Maps.html)
 
-.footnote[Restart [Part 6: Static Maps](06-Static Maps.html)]
+.footnote[Restart [Part 6: Static Maps](06-Static_Maps.html)]

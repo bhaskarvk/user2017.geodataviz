@@ -56,7 +56,8 @@ Suggests: albersusa,
 			tmap,
 			viridis,
 			widgetframe,
-			xaringan
+			xaringan,
+      elevatr
 Remotes: tidyverse/ggplot2,
   - edzer/sfr,
   - hrbrmstr/ggalt,

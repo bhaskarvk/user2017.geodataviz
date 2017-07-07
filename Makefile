@@ -1,4 +1,4 @@
-.PHONY: all build publish clean
+.PHONY: all knit install check build publish clean
 
 # All Markdowns except notebooks
 RMD_FILES=$(shell find . -path ./inst/notebooks -prune -o -name '*.Rmd' -print)

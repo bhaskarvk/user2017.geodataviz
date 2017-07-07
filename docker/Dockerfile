@@ -11,7 +11,7 @@ RUN apt-get update \
   raster rasterVis \
   ggthemes ggiraph ggalt hrbrthemes ggmap ggspatial \
   leaflet leaflet.minicharts leaflet.extras leaflet.esri \
-  lawn geojson geojsonio geoaxe geonames \
+  lawn geojson geojsonio geoaxe geonames elevatr\
   cartogram cartography tmap mapview \
   tigris acs tidycensus usmap \
   tilegramsR colormap \

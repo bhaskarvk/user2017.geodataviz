@@ -14,141 +14,103 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Geospatial Data Visualization using R
+# Geospatial Data Visualization Using R
 
-The goal of user2017.geodataviz is to privide a comprehensive overview of the options available in the R language for Geospatial data visualization. This tutorial covers ...
+The goal of user2017.geodataviz is to privide a comprehensive overview of the options available in the R language for Geospatial data visualization. This was presented at [useR! 2017](https://user2017.brussels/) as a tutorial titled [Geospatial visualization using R](https://www.user2017.brussels/uploads/BhaskarKarambelkar.html).
 
-- R Packages
+This tutorial covers ...
 
-- R Data Structures for Spatial Data
+- R Packages for Spatial Analysis in R
+
+- Data Structures for Spatial Data in R
 
 - Operations Supported on Spatial Data
 
-- Visualizing Spatial Data
+- Visualizing Spatial Data...
+	* Using Base Graphics
+	* Using `ggplot2` and helper packages
+	* Using `shiny` for dynamic mapping
+	* Using `leaflet` and related packages for interactive maps.
+	* Using specialized packages such as `tmap`, `choroplethr`, `ggmap`, `plotly`, `highcharter` etc.
 
-  - Using Base Graphics
-  - Using `ggplot2` and helper packages
-  - Using `shiny` for dynamic mapping
-  - Using `leaflet` and related packages for interactive maps.
-  - Using specialized packages such as `tmap`, `choroplethr`, `ggmap`, `plotly`, `highcharter` etc.
+I will add more and more samples as time progresses so keep a tab on this repository from time to time.
 
-## Slides
+## Slides and R Notebooks
 
-The tutorial overview and the slides can be found [here](https://bhaskarvk.github.io/user2017.geodataviz/).
+The tutorial overview, the slides, and the R Notebooks can be found [here](https://bhaskarvk.github.io/user2017.geodataviz/).
 
 ## Installation
 
-### The Docker way
+### The Docker Way
 
 The easiest option is using a docker image built specifically for this tutorial.
 
 - Install [docker](https://store.docker.com/search?type=edition&offering=community), and [docker toolbox](https://www.docker.com/products/docker-toolbox) (only for Windows and Mac).
 
-- Either using the kitematic GUI tool or command line pull the `bhaskarvk/rgeodataviz` image.<br/>Command line: `docker pull bhaskarvk/rgeodataviz`
+- Either using the [kitematic](https://kitematic.com/) GUI tool or command line pull the `bhaskarvk/rgeodataviz` image.<br/>Command line: `docker pull bhaskarvk/rgeodataviz`
+
+For the interested the docker image was built on top of [rocker](https://github.com/rocker-org/rocker).
 
 ### Manually
 
-If docker is not an option, then please install the following packages. Some of these packages have external dependencies, so be sure to consult individual package's documentation on installation procedures.
+This tutorial is also an R package which enables you to pull in all the packages needed to run this tutorial. You can install all the needed packages simply by installing this package.
 
-From CRAN install
+First start by cloning this git repository, or better yet fork this repository on github and pull your fork. That way you can push changes to your fork.
 
-- Generic Packages
-  - devtools
-  - tidyverse
-  - rmarkdown
-  - shiny
-  - roxygen2
-  - rstudioapi
-  - rsconnect
-  - hrbrthemes
-  - ggiraph
-  - widgetframe
-  - manipulateWidget
-  - xaringan
-  - knitr
-- Spatial Packages
-  - sp
-  - sf
-  - regos
-  - rgdal
-  - raster
-  - rasterVis
-  - gdistance
-  - geosphere
-  - maps
-  - maptools
-  - gdalUtils
-  - cleangeo
-  - rmapshaper
-  - spatstat
-  - leaflet
-  - leaflet.extras
-  - leaflet.esri
-  - leaflet.minimaps
-  - ggmap
-  - ggalt
-  - ggspatial
-  - rasterVis
-  - lawn
-  - geojson
-  - geojsonio
-  - geoaxe
-  - geonames
-  - wkb
-  - tmap
-  - mapview
-  - mapedit
-  - cartography
-  - ggmap
-  - cartogram
-  - raturalearth
-  - choroplethr
-  - choroplethsMaps
-  - plotly
-  - highcharter
-  - tilegramsR
-  - acs
-  - tigris
-  - tidycensus
-  - usmap
-  - osmdata
-  - OpenSteeetMap
-  - plotKML
-  - googleway
-  - plotGoogleMaps
-  - rbokeh
-  - RNetCDF
-  - ncdf4
-  - rnoaa
-  - ropenaq
-  - animation
+```bash
+git clone https://github.com/bhaskarvk/user2017.geodataviz
+# OR git pull <your forked repository>
+cd user2017.geodataviz
+```
 
-We also need development versions of certain packages, which can be installed from github. FOr each package name below install it using `devtools::install_github(<package-repo-name>')`. The repository names are given below
+Next start `R` in this directory, and install this package and all its dependencies.
 
-  - tidyverse/ggplot2
-  - edzer/sfr
-  - hrbrmstr/ggalt
-  - hrbrmstr/albersusa
-  - hrbrmstr/hrbrthemes
-  - rstudio/leaflet
-  - rstudio/DT
-  - rstudio/rmarkdown
-  - rstudio/crosstalk
-  - mtennekes/tmap
-  - bhaskarvk/leaflet.extras
-  - bhaskarvk/leaflet.esri
-  - 'r-spatial/mapview@develop'
-  - r-spatial/mapedit
-  - nowosad/spData
-  - dkahle/ggmap
-  - walkerke/tidycensus
-  - hrecht/censusapi
-  - ropenscilabs/rnaturalearthhires
-  - ropensci/geoparser
-  - ropensci/plotly
-  - arilamstein/choroplethrZip
-  - oswaldosantos/ggsn
-  - paleolimbot/ggspatial
-  - dgrtwo/gganimate 
-  - riatelab/cartography
-  - bhaskarvk/user2017.rgeodataviz
+```{r, eval=FALSE}
+if(!require("devtools")) {
+  install.packages("devtools")
+}
+devtools::install(dependencies="Suggests")
+```
+
+That should pull in all the packages required, but be aware of the following points...
+
+- The docker image has some more extra packages that were not used in the tutorial but available for you to use.
+- The list of packages is quite big so installation can be slow.
+- Some packages have dependencies on external libraries which you will need to install, otherwise the packages won't compile if being built from source. The docker image comes with these packages pre-installed.
+
+## Up and Running
+
+If you are using docker, then run the following command.
+
+```bash
+docker run -d -p 8787:8787 --name rgeodataviz bhaskarvk/rgeodataviz
+```
+
+This will start the docker container and you can connect to the Rstudio session using the URL 'http://localhost:8787', the userid/password are `rstudio/rstudio`.
+
+If you are running in a local environment you can simply open the `user2017.geodataviz.Rproj` file from the `user2017.geodataviz` directory which you checked-out using git above.
+
+To stop and subsequently start the container again use
+
+```bash
+docker stop rgeodataviz
+docker start rgeodataviz
+```
+
+Occasionally I will be pushing updates to the docker image. If you want the latest docker image you will have to destroy the existing container, pull the latest image and rerun the container.
+
+```bash
+docker stop rgeodataviz
+docker container rm rgeodataviz
+docker pull bhaskarvk/rgeodataviz
+docker run -d -p 8787:8787 --name rgeodataviz bhaskarvk/rgeodataviz
+```
+
+Destroying the container (`docker container rm`) will delete any data or files you may have changed, so back them up somewhere.
+
+## The Tutorial Material
+
+The tutorial material is in two directories `inst/presentations` and `inst/notebooks`. The `presentations` directory contains RMarkdowns used to generate the slides, and the `notebooks` directory contains many code samples in R Notebook format for you to play with. You can knit these files directly from withing RStudio.
+
+## Code Of Conduct
+Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
