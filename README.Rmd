@@ -1,7 +1,5 @@
 ---
 output:
-  html_document:
-    toc: FALSE
   md_document:
     variant: markdown_github
 ---
