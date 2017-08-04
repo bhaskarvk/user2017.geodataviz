@@ -66,8 +66,8 @@ widgetframe::frameWidget(ggiraph(code=print(g)))
 # Using `plotly`
 
 
-```{r 02, eval=FALSE}
-library(plotly)
+```{r 02, fig.width=6, fig.height=5, fig.align='center'}
+suppressPackageStartupMessages(library(plotly))
 usa <- albersusa::usa_sf("laea")
 usd <- crosstalk::SharedData$new(usa)
 p <- ggplot(usd) + geom_sf(aes(fill = pop_2010))
@@ -127,7 +127,7 @@ hcmap("countries/au/au-all", data = data_fake, value = "value",
   widgetframe::frameWidget()
 ```
 
-# Using `leaflet
+# Using `leaflet`
 
 
 ```{r libs, echo=FALSE, message=FALSE, warning=FALSE}

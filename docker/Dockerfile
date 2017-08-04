@@ -1,10 +1,12 @@
 From rocker/geospatial:latest
 Maintainer "Bhaskar V. Karambelkar" bhaskarvk@gmail.com
 
+COPY sources.list /etc/apt/
 RUN apt-get update \
   && apt-get upgrade -y \
   && apt-get install -y --no-install-recommends \
   libprotobuf-dev protobuf-compiler \
+  && Rscript -e "update.packages(ask=FALSE)" \
   && install2.r evaluate learnr \
   animation \
   maptools rmapshaper cleangeo gdistance spatstat \

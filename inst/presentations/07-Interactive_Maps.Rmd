@@ -124,9 +124,23 @@ ggplotly(p) %>%
 
 ```
 
---
+---
 
-- For some reason not working for me right now. So no output, Sorry! But feel free to try yourself.
+# `plotly` plot
+
+```{r 07-041, echo=FALSE, fig.width=10, fig.height=8, fig.align='center'}
+suppressPackageStartupMessages(library(plotly))
+usa <- albersusa::usa_sf("laea")
+usd <- crosstalk::SharedData$new(usa)
+p <- ggplot(usd) + geom_sf(aes(fill = pop_2010))
+
+ggplotly(p) %>%
+  highlight(
+    "plotly_hover",
+    selected = attrs_selected(line = list(color = "black"))
+) %>%
+widgetframe::frameWidget()
+```
 
 ---
 
@@ -154,6 +168,7 @@ suppressWarnings(figure(width = 800, height = 450, padding_factor = 0) %>%
 # `rBokeh` plot
 
 ```{r 07-06, echo=FALSE, fig.width=10, fig.height=8, fig.align='center'}
+
 library(maps)
 data(world.cities)
 library(rbokeh)
@@ -235,8 +250,6 @@ suppressPackageStartupMessages(library(leaflet.extras))
 
 - Extremely powerful and Extremely flexible.
 
---
-
 - Current State
 
   - `leaflet`: Developed and actively maintained by RStudio.
@@ -244,8 +257,6 @@ suppressPackageStartupMessages(library(leaflet.extras))
   - `leaflet.extras`, `leaflet.esri`: Developed and maintained by yours truly. Provides additional plotting options using leaflet plugins.
   
   - `mapview`, `mapedit`: Developed and maintained by the good guys at [r-spatial](http://r-spatial.org/projects/). Allow interactive exploratory spatial analysis.
-
---
 
 - There is another unrelated project `leafletR` [CRAN Page](https://github.com/chgrl/leafletR), but really don't know much about it.
 

@@ -27,19 +27,11 @@ library(magrittr)
 
 # Part3: Spatial Data
 
---
-
 - Vector Data
-
---
 
 - Raster Data
 
---
-
 - Spatio-Temporal Data
-
---
 
 - Multi-Dimensional Spatial Data
 
@@ -53,31 +45,17 @@ class: inverse center middle
 
 # The `sp` Package
 
---
-
 - **`sp`** package contains S4 classes to represent 2D vector data.
-
---
 
 - Line / Lines / Polygon / Polygons
 
---
-
 - SpatialPoints / SpatialMultiPoints / SpatialLines / SpatialPolygons
-
---
 
 - SpatialPointsDataFrame (SPnDF), SMPnPDF, SLDF, SPoDF (Not really data.frame objects)
 
---
-
 - `rgdal::readOGR` function returns `sp` object/s from data stored in files.
 
---
-
 - Not compatible with the 'tidyverse' way, and `sp` operations can be slow.
-
---
 
 - `ggplot2` + `sp` is cumbersome as we shall see in Part 5.
 
@@ -124,23 +102,13 @@ class(scot_BNG)
 
 # Simple Features
 
---
-
 - Simple Features is a two part OGC and ISO standard for common storage and access model of 2D geometries.
-
---
 
 - Part one defines a hierarchy of classes and their textual and binary representation using Well-known text (WKT) and binary (WKB) formats.
 
---
-
 - e.g. `POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))` ![](https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/SFA_Polygon.svg/51px-SFA_Polygon.svg.png)
 
---
-
 - Part two specifies the SQL interface to access this data.
-
---
 
 - Everything on this slide came straight from the Wikipedia entry for [Simple Features](https://en.wikipedia.org/wiki/Simple_Features) and [Well-known text](https://en.wikipedia.org/wiki/Well-known_text).
 
@@ -148,27 +116,15 @@ class(scot_BNG)
 
 # The `sf` Package
 
---
-
 - The `sf` package is the implementation of Simple Features Access standard.
-
---
 
 - Instead of S4 classes, uses `data.frame`s with `list-columns` for storing geometries.
 
---
-
 - Way faster than `sp` and plays nicely with `tidyverse` packages.
-
---
 
 - Easy to plot with `ggplot2` or `leaflet`.
 
---
-
 - Also unlike `sp`, a single `sf` object can contain geometries of different kinds.
-
---
 
 - `sf` functions start with `st`, `sfg` is the geometry of a feature,<br/> `sfc` is the list-column of a `sf` `data.frame` object containing a list of geometries.
 
@@ -195,8 +151,6 @@ class: inverse center middle
 - Defines `RasterLayer` / `RasterStack` / `RasterBrick` classes.
 
 - Defines operations on raster data.
-
---
 
 ## Sample `raster` object
 
