@@ -64,31 +64,17 @@ nrow(meuse[meuse$lead&gt;quantile(meuse$lead,.75),])
 ---
 # Other Operations on `sp` objects
 
---
-
 - `[[`: Data for single column `plot(hist(meuse[['zinc']]))`
-
---
 
 - `[[&lt;-`: Replace values of single column &lt;br/&gt; `meuse[['lead']] &lt;- rnorm(nrow(meuse))`
 
---
-
 - `proj4String` / `proj4String&lt;-`: Returns / sets (w/o transforming) the CRS.
-
---
 
 - `spTransform(meuse, CRS("+init=epsg:4326"))`: Convert from one CRS to another.
 
---
-
 - `geometry(meuse)`: Strip the fields and return the bare geometry.
 
---
-
 - `over(points, polygons, returnList=TRUE)`:&lt;br/&gt; Returns a list indicating which polygons contain each point in `points` data-set.
-
---
 
 - `rgeos` / `gdistance` / `geosphere` / `maptools`:&lt;br/&gt;Packages contain many geometry and feature related operations.
 
@@ -109,8 +95,6 @@ plot(scot_BNG, col='#aaaaaa', border=0)
 
 # Operations on `sf` Objects
 
---
-
 - `sp` =&gt; `sf`
 
 
@@ -126,25 +110,15 @@ as.data.frame(meuse_sf[1:2,c('lead', 'zinc', 'geometry')])
 ## 2  277 1141 POINT(181025 333558)
 ```
 
---
-
 - `st_coordinates(sf)`: Extract the X/Y coordinates.
 
---
-
 - `st_geometry(sf)`: Just the geometry, the `sfc` column.
-
---
 
 - `st_as_text(sfg)` / `st_as_binary(sfg)` convert to WKT and WKB resp.
 
 - `st_as_sfc()` for converting a foreign object into a `sfc`.
 
---
-
 - Check out `methods(class='sfc')` for many more methods.&lt;sup&gt;1&lt;/sup&gt;
-
---
 
 .footnote[1 - Best place to start are the `sf` vignettes [here](https://cran.r-project.org/web/packages/sf/vignettes/sf1.html) &amp; [here](https://cran.r-project.org/web/packages/sf/vignettes/sf3.html).]
 
@@ -223,15 +197,9 @@ hist(r); hist(r_log)
 
 # Operations via External Tools
 
---
-
 - `RQGIS`: Uses QGIS Python API and allows you to access many native and 3&lt;sup&gt;rd&lt;/sup&gt;-party plugin based geospatial algorithms/analysis.
 
---
-
 - `RQGIS` also allows you to access `GRASS7` and `SAGA`, but you also have option of using `rgrass7` and `RSAGA`.
-
---
 
 - `rpostgis` &amp; `postGIStools` allow you to access data in PostGIS, but so does the PostGIS driver in `gdal` so you can query directly from `rgdal` and `sf` too.
 

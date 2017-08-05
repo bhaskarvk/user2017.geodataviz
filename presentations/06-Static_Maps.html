@@ -23,19 +23,11 @@ class: center, middle, inverse, title-slide
 
 # Ways To Create Static Maps
 
---
-
 - Base plotting
-
---
 
 - `ggplot2` and related packages
 
---
-
 - Ease-of-use packages
-
---
 
   - `tmap`
   - `choroplethr`
@@ -46,15 +38,9 @@ class: center, middle, inverse, title-slide
 
 # Plotting with Base R: Sample 1
 
---
-
 - `plot()` works on all spatial objects. `plot(..., add=TRUE)` to overlay.
 
---
-
 - Can be cumbersome to create production-ready maps.
-
---
 
 
 ```r
@@ -127,15 +113,9 @@ legend("topright", legend = v, pch = 20, pt.cex = v/2,
 
 # Plotting with Base R: Sample 2
 
---
-
 - Actually I cheated with the last plot. 
 
---
-
 - The plot you saw as plotted in [Winkel triple](https://en.wikipedia.org/wiki/Winkel_tripel_projection) projection, while the code was using lat/long values.
-
---
 
 - Before the `par(...)` line we need to convert all the data to our target projection.
 
@@ -147,19 +127,13 @@ grid.lines.mj &lt;- spTransform(grid.lines.mj,CRS("+proj=wintri"))
 grid.lines.mi &lt;- spTransform(grid.lines.mi,CRS("+proj=wintri"))
 ```
 
---
-
 - But the lables were showing lat/long values, how come ?
-
---
 
 
 ```r
 text(labels(grid.lines.mj, side=1:2, labelCRS = CRS("+init=epsg:4326")),
      col = grey(.6), offset=0.3)
 ```
-
---
 
 - [projectionwizard.org](http://projectionwizard.org/) helps you determine sensible projection/s for your data.
 
@@ -170,27 +144,15 @@ text(labels(grid.lines.mj, side=1:2, labelCRS = CRS("+init=epsg:4326")),
 
 - `sp::gridlines()`, `sp::graiddata()`, `sp::labels()`, `sp::text()`: &lt;br/&gt; Creates and plot EW and NS grid lines
 
---
-
 - `sp::bbox()` / `sp::bbexpand()`: Retrieves / expands the bounding-box of a spatial object.
-
---
 
 - Raster data is plotted similar to vector data, but for reprojecting rasters use `raster::projectRaster()` instead of `sp::Transform()`.
 
---
-
 - [`sp` Gallery](https://edzer.github.io/sp/) is probably the best source for advanced `sp` plotting using base R graphics. 
-
---
 
 - [`sf` Plotting](http://r-spatial.org/r/2017/01/12/newssf.html) is discussed in detail by Edzer Pebesma, the author of `sf`.
 
---
-
 - Robin Lovelace maintains a really good [repository](https://github.com/Robinlovelace/Creating-maps-in-R) intruducing spatial visualization in R.
-
---
 
 - Zev Ross (again!) has a very good [blog post](http://zevross.com/blog/2015/03/30/map-and-analyze-raster-data-in-r/) for working with raster data in R.
 
@@ -231,8 +193,6 @@ europe.tidy &lt;- dplyr::left_join(europe.tidy, europe@data, by='id')
 
 - Ready to make a production grade map?
 
---
-
 
 ```r
 library(ggplot2)
@@ -259,8 +219,6 @@ ggplot(europe.tidy, aes(long,lat, group=group,fill=gdp_md_est/1000)) +
 # Plotting with `ggplot2`: `sf` Data
 
 - Similar to last plot, but with `sf`.
-
---
 
 
 ```r
@@ -342,8 +300,6 @@ r &lt;- raster(system.file("external/test.grd", package="raster"))
 
 - Supports many different map styles and aesthetic elements like compass, legend, scale etc.
 
---
-
 
 ```r
 usa_pop_history &lt;- readr::read_tsv(system.file(
@@ -369,15 +325,9 @@ tmap::qtm(usa, fill=paste0("p.",years), title=years,
 
 # Plotting with `ggmap`
 
---
-
 - Primarily used to add base maps from Google Maps, OSM, Stamen etc. to `ggplot2` maps.
 
---
-
 - The returned object is a `ggplot2` object which can be further worked upon.
-
---
 
 
 ```r
@@ -459,7 +409,7 @@ plot(st_centroid(africa), add=TRUE, col='black', pch=20)
 
 class: inverse middle
 
-# Part 5: The End!
+# Part 6: The End!
 
 Continue to [Part 7: Interactive Maps](07-Interactive_Maps.html)
 
