@@ -71,7 +71,7 @@ library(magrittr)
 
 - [getlandsat](https://cran.r-project.org/package=getlandsat): A treasure trove of Landsat data.
 
-- [elevatr](https://cran.r-project.org/package=elevatr): Access evevation data via several web-services.
+- [elevatr](https://cran.r-project.org/package=elevatr): Access elevation data via several web-services.
 
 - [tigris](https://cran.r-project.org/package=tigris) / [tidycensus](https://cran.r-project.org/package=tidycensus) / [acs](https://cran.r-project.org/package=acs) / [censusapi](https://cran.r-project.org/package=censusapi): Packages for US Census Bureau Data.
 
@@ -111,7 +111,7 @@ library(magrittr)
 
 - [rasterVis](https://cran.r-project.org/package=rasterVis): For raster data, duh!
 
-- [gganimate](https://github.com/dgrtwo/gganimate) / [animation](https://cran.r-project.org/package=animation): Stitch a bunch of static plots for animation. Useful for spatio-tempral data
+- [gganimate](https://github.com/dgrtwo/gganimate) / [animation](https://cran.r-project.org/package=animation): Stitch a bunch of static plots for animation. Useful for spatio-temporal data
 
 .footnote[1 - See [Data Visualization with R](http://www.datavisualisation-r.com/), a new book that deals extensively with base plotting.]
 
